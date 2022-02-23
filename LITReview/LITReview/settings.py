@@ -55,7 +55,9 @@ ROOT_URLCONF = 'LITReview.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            '/mnt/c/Users/galatee/OpenClassroom/P9/OC_P9/LITReview/reviews/templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

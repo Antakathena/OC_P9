@@ -20,11 +20,11 @@ from reviews import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accueil/', views.accueil),
-    path('créer un post/', views.post),
-    path('créer une critique/', views.critique),
-    path('répondre à un post/', views.repondre),
-    path('voir mes posts/', views.mesPosts),
+    path('post/', views.post),
+    path('critique/', views.critique),
+    path('répondre/', views.repondre),
+    path('mes posts/', views.mesPosts),
     path('mon flux/', views.monFlux),
-    path("formulaire d'inscription/", views.inscription),
-    path("onglet d'abonnement", views.suivre),
+    path("inscription/", views.inscription),
+    path("suivre", views.suivre),
 ]
