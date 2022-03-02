@@ -12,13 +12,13 @@ padding: 20px;
 background-color: rgb(90, 60, 30);
 display:flex;
 flex-wrap:wrap;
-/* justify-content: space-around; */
 min-width: 100%;
 /* position: fixed; z-index: 2; */
 }
 
 .menu {
-    margin-left: 50vh;
+    align-items: right;
+    margin-left: 50%;
     text-shadow: 2px 2px 0 darkolivegreen;
 }
 
@@ -35,15 +35,7 @@ ul {
     padding: 0;
     overflow: hidden;
 }
-/* nav a {
-    text-decoration: none;
-    color:white;
-    display: block;
-    padding: 5px 10px;
-    text-shadow: -1px -1px 0 #888;
-    text-align: center;
-    background: #999;
-} */
+
 a {
     text-decoration: none;
     color:white;
@@ -69,12 +61,12 @@ h1 {
 /* style body */
 
 h2 {
-    border: 2px solid #fff;
+    /* border: 2px solid #fff; */
+    color : black;
     margin : 20px;
     padding: 20px;
     padding-left: 80px;
     font-size: 2rem;
-    color: darkolivegreen;
     text-align: left;
     justify-content: center;
 }
@@ -82,8 +74,8 @@ h2 {
 h3 {
     margin: 20px;
     font-size: 1.5rem;
-    color: darkgoldenrod;
     text-align: left;
+    color : black;
     padding-left: 250px;
     justify-content: center;
     }

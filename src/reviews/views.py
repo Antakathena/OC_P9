@@ -3,6 +3,34 @@ from django.shortcuts import render
 from django.template.loader import get_template
 from datetime import datetime
 
+from reviews.models import Ticket, Review
+
+dummy_tickets = [
+    {
+        'title' : "Madame Bovary",
+        'description' : "l'avez-vous lu?",
+        'user' : 'Lucie',
+    },
+        {
+        'title' : "L'Alchimiste",
+        'description' : "l'avez-vous lu?",
+        'user' : 'Marc',
+    },
+]
+
+dummy_reviews = [
+    {
+        'headline' : "Madame Bovary",
+        'body' : "l'ennui personnifié",
+        'user' : 'Marc',
+    },
+        {
+        'headline' : "L'Alchimiste",
+        'body' : "blablabla",
+        'user' : 'Lucie',
+    },
+]
+
 # nb : ce serait bien de pouvoir afficher les tickets et critiques en faisant une
 # recherche par auteur, titre, etc. c'est quoi les champs déjà?
 
@@ -32,7 +60,7 @@ def critique(request):
     """
     poster une critique a propos d'un livre
     """
-    return render(request,"critique.html", context = {'titre':'Madame Bovary'})
+    return render(request,"critique.html", context = {'title':'critique','titre':'Madame Bovary'})
 
 def repondre(request):
     """
@@ -52,7 +80,10 @@ def mesPosts(request):
     """
     #quelque chose comme for ticket in ticket + for critique in critique
     # (ajouter au context?) l'afficher dans la page
-    return HttpResponse('<h1>Suivre mes posts</h1>')
+    tickets = Ticket.objects.all()
+    critiques = Review.objects.all()
+    # return render(request,"mesPosts.html", context = {'tickets':tickets, 'critiques':critiques})
+    return render(request,"mesPosts.html", context = {'tickets':dummy_tickets, 'critiques':dummy_reviews})
 
 def monFlux(request):
     """

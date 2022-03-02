@@ -1,15 +1,20 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
+    {% if title %}
+    <title>LITReview - {{title}}</title>
+    {% else %}
     <title>LITReview</title>
+    {% endif %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MerchEx - {% block title %}{% endblock title %}</title>
-    <link rel="stylesheet" href="{% static 'css/resetmeyer.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/resetmeyer.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
 
     {% block extra_css %}
     {% endblock extra_css %}
@@ -19,13 +24,13 @@
 
 <body>
     <header>
-        <h1>
-            LITReview
-        </h1>
+        <a href="{% url 'reviews-accueil' %}">
+            <h1>LITReview</h1>
+        </a>
         <div class="menu">
             <nav>
                 <ul>
-                    <li><a href="..\reviews\templates\accueil.html">accueil</a></li>
+                    <li><a href="{% url 'reviews-accueil' %}">accueil</a></li>
                     <li><a href="#flux">flux</a></li>
                     <li><a href="#posts">posts</a></li>
                     <li><a href="#abonnements">abonnements</a></li>
