@@ -3,44 +3,58 @@ from django.shortcuts import render
 from django.template.loader import get_template
 from datetime import datetime
 
-from reviews.models import Ticket, Review
+from .models import Ticket, Review
 
 dummy_tickets = [
     {
         'title' : "Madame Bovary",
         'description' : "l'avez-vous lu?",
         'user' : 'Lucie',
+        'time_created' : "21th march 2022",
     },
         {
         'title' : "L'Alchimiste",
         'description' : "l'avez-vous lu?",
         'user' : 'Marc',
+        'time_created' : "23th march 2022"
     },
 ]
 
-dummy_reviews = [
-    {
-        'headline' : "Madame Bovary",
-        'body' : "l'ennui personnifié",
-        'user' : 'Marc',
-    },
-        {
-        'headline' : "L'Alchimiste",
-        'body' : "blablabla",
-        'user' : 'Lucie',
-    },
-]
+# dummy_reviews = [
+#     {
+#         'headline' : "Madame Bovary",
+#         'body' : "l'ennui personnifié",
+#         'user' : 'Marc',
+#     },
+#         {
+#         'headline' : "L'Alchimiste",
+#         'body' : "blablabla",
+#         'user' : 'Lucie',
+#     },
+# ]
 
 # nb : ce serait bien de pouvoir afficher les tickets et critiques en faisant une
 # recherche par auteur, titre, etc. c'est quoi les champs déjà?
 
+def home(request):
+    """
+    vue basée sur le tuto : https://www.youtube.com/watch?v=qDwdMDQ8oX4
+    dans un dossier appName -> templates -> appName selon la convention Django
+    """
+    context = {
+        'title':'home',
+        'prenom':'Sophie',
+        'tickets': Ticket.objects.all(),
+    }
+    return render(request,"reviews/home.html", context )
+    
 def accueil(request):
     """
     présentation du site et menu détaillé
     possibilité de se connecter
     renvoi vers ou possibilité de s'inscrire
     """
-    return render(request,"accueil.html")
+    return render(request,"reviews/accueil.html")
 
 
 def ticket(request):
@@ -51,7 +65,7 @@ def ticket(request):
     # à la db avec l'information de la date, l'auteur, etc. pour pouvoir la retrouver
     # ce ticket sera affiché sur la page des utilisateurs abonnés
     date = datetime.today()
-    return render(request,"ticket.html", context = {'prenom':'Sophie','date':date})
+    return render(request,"reviews/ticket.html", context = {'prenom':'Sophie','date':date})
     template = get_template("ticket.html")
     page = template.render({"exemple": "coucou ! depuis views.py"})
     return HttpResponse(page)
@@ -60,7 +74,7 @@ def critique(request):
     """
     poster une critique a propos d'un livre
     """
-    return render(request,"critique.html", context = {'title':'critique','titre':'Madame Bovary'})
+    return render(request,"reviews/critique.html", context = {'title':'critique','titre':'Madame Bovary'})
 
 def repondre(request):
     """
@@ -81,9 +95,9 @@ def mesPosts(request):
     #quelque chose comme for ticket in ticket + for critique in critique
     # (ajouter au context?) l'afficher dans la page
     tickets = Ticket.objects.all()
-    critiques = Review.objects.all()
+    reviews = Review.objects.all()
     # return render(request,"mesPosts.html", context = {'tickets':tickets, 'critiques':critiques})
-    return render(request,"mesPosts.html", context = {'tickets':dummy_tickets, 'critiques':dummy_reviews})
+    return render(request,"reviews/mesPosts.html", context = {'tickets':tickets, 'critiques':reviews})
 
 def monFlux(request):
     """

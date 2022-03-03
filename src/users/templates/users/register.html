@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Register</h2>
+<div class="content-section">
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Inscription</legend>
+            {{ form.as_p }}
+            <!-- le as_p sert à présenter sous forme de paragraphes -->
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-outline-info" type="submit">Je m'inscris</button>
+        </div>
+    </form>
+    <div class="border-top pt-3">
+        <small class="text-muted">Déjà inscrit? <a class="ml-2" href="#">Se connecter</a>
+        </small>
+    </div>
+</div>
+{% endblock content %}

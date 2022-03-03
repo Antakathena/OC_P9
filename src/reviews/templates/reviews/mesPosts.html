@@ -7,7 +7,10 @@
 {% for ticket in tickets %}
 <div class="container">
     <h3>{{ticket.title}}</h3>
-    <img src="{{ticket.image.url}}" alt="{{ticket.title}}">
+
+    <!-- <img src="{{ticket.image.url}}" alt="{{ticket.title}}"> -->
+    <!-- ne marche pas si on laisse l'image, pourtant  blank? mettre un if? -->
+
     <!-- nb : si on créé un modèle livre, indiquer le titre de l'ouvrage en alt -->
     <!-- il faut servir les fichiers statics en faisant les imports dans urls.py :
     en haut from django.conf.urls.static import statics

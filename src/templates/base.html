@@ -10,11 +10,14 @@
     {% endif %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MerchEx - {% block title %}{% endblock title %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <link rel="stylesheet" type="text/css" href="{% static 'css/resetmeyer.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"> -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     {% block extra_css %}
     {% endblock extra_css %}
@@ -23,11 +26,33 @@
 </head>
 
 <body>
-    <header>
+    <header class="site-header">
         <a href="{% url 'reviews-accueil' %}">
             <h1>LITReview</h1>
         </a>
-        <div class="menu">
+        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+            <div class="container">
+                <a class="navbar-brand mr-4" href="/">LITReview</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
+                    aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarToggle">
+                    <div class="navbar-nav mr-auto">
+                        <a class="nav-item nav-link" href="{% url 'reviews-home' %}">Home</a>
+                        <a class="nav-item nav-link" href="{% url 'reviews-accueil' %}">Accueil</a>
+                        <a class="nav-item nav-link" href="{% url 'reviews-ticket' %}">Demander une critique</a>
+                        <a class="nav-item nav-link" href="{% url 'reviews-mesPosts' %}">mes Posts</a>
+                    </div>
+                    <!-- Navbar Right Side -->
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="#">Se connecter</a>
+                        <a class="nav-item nav-link" href="#">Inscription</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- <div class="menu">
             <nav>
                 <ul>
                     <li><a href="{% url 'reviews-accueil' %}">accueil</a></li>
@@ -37,16 +62,48 @@
                     <li><a href="#se déconnecter">se déconnecter</a></li>
                 </ul>
             </nav>
-        </div>
+        </div> -->
     </header>
-    <main>
-        {% block content %}
-        {% for post in posts %}
-        {% include 'post.html' %}
-        {% endfor %}
-        {% endblock content %}
+
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-8">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}} ">
+                    <!-- on peut faire message.tags car les noms d'alerte dans django et bootstrap sont les mêmes -->
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% block content %}{% endblock %}
+            </div>
+            <div class="col-md-4">
+                <div class="content-section">
+                    <h3>Mes rubriques</h3>
+                    <p class='text-muted'>Ajouter des li si besoin.
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-light">Abonnements</li>
+                        <li class="list-group-item list-group-item-light">Mes posts</li>
+                    </ul>
+                    </p>
+                </div>
+            </div>
+        </div>
     </main>
-    <footer>LITReview</footer>
+    <footer class="page-footer font-small blue text-center">LITReview</footer>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 
 </body>
 
