@@ -2,20 +2,20 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<h2>Créer un compte</h2>
+<h2>Connexion</h2>
 <div class="content-section">
     <form method="POST">
         {% csrf_token %}
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Inscription</legend>
+            <legend class="border-bottom mb-4">Se connecter</legend>
             {{ form|crispy }}
         </fieldset>
         <div class="form-group">
-            <button class="btn btn-outline-info" type="submit">Je m'inscris</button>
+            <button class="btn btn-outline-info" type="submit">Se connecter</button>
         </div>
     </form>
     <div class="border-top pt-3">
-        <small class="text-muted">Déjà inscrit? <a class="ml-2" href="{% url 'login'%}">Se connecter</a>
+        <small class="text-muted">Créer un compte ?<a class="ml-2" href="{% url 'register'%}">S'inscrire</a>
         </small>
     </div>
 </div>
