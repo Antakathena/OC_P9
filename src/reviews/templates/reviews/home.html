@@ -6,6 +6,7 @@
 
 {% for ticket in tickets %}
 <article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ ticket.user.profile.image.url}}" alt="user profile image">
     <div class="media-body">
         <div class="article-metadata">
             <a class="mr-2" href="#">{{ ticket.user }}</a>

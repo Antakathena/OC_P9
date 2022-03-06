@@ -1,0 +1,13 @@
+<!-- partie fournie dans le projet OC
+in feed.html
+Use the 'include' tag to reuse ticket and review elements between pages -->
+
+...
+<!-- Afficher les tickets et reviews des utilisateurs qu'on suit, 
+donc chercher les utilisateurs suivis et pour chacun afficher ses tickets et ses reviews -->
+{% for post in posts %}
+{% if post.content_type == 'TICKET' %}
+{% include 'ticket_snippet.html' %}
+{% elif post.content_type == 'REVIEW' %}
+{% include 'review_snippet.html' %}
+{% endfor %}

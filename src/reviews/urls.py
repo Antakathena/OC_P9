@@ -3,7 +3,8 @@ from django.urls import path
 from reviews import views
 
 urlpatterns = [
-    path('', views.accueil, name = "reviews-accueil"),
+    path('', views.home, name = "reviews-accueil"),
+    # pour l'instant je laisse un nom différent mais il faudra traquer les reviews-accueil à changer enhom ou inversement
     path('ticket/', views.ticket, name = "reviews-ticket"),
     path('critique/', views.critique),
     path('répondre/', views.repondre),

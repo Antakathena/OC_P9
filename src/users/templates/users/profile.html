@@ -3,5 +3,26 @@
 
 {% block content %}
 <h2>{{user.username}}</h2>
+<div class="content-section">
+    <div class="media">
+        <img class="circle-image rounded-circle account-img" src="{{ user.profile.image.url }}">
+        <!-- voir plus tard comment adapter les images pour qu'elle ne soit pas étirée (ajout de circle image + custom in main.css ne marche pas) -->
+        <div class="media-body">
+            <h2 class="account-heading">{{ user.username }}</h2>
+            <p class="text-secondary">{{ user.email }}</p>
+        </div>
+    </div>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Mon Profil</legend>
+            {{ u_form|crispy }}
+            {{ p_form|crispy }}
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-outline-info" type="submit">Update</button>
+        </div>
+    </form>
+</div>
 
 {% endblock content %}

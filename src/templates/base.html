@@ -27,9 +27,10 @@
 
 <body>
     <header class="site-header">
-        <a href="{% url 'reviews-accueil' %}">
+        <a class="nav-item nav-link" href="{% url 'reviews-home' %}">
             <h1>LITReview</h1>
         </a>
+        <!-- pourquoi ça ne marche pas quand on clique sur le h1? -->
         <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
             <div class="container">
                 <a class="navbar-brand mr-4" href="/">LITReview</a>
@@ -39,8 +40,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarToggle">
                     <div class="navbar-nav mr-auto">
-                        <a class="nav-item nav-link" href="{% url 'reviews-home' %}">Home</a>
-                        <a class="nav-item nav-link" href="{% url 'reviews-accueil' %}">Accueil</a>
+                        <a class="nav-item nav-link" href="{% url 'reviews-home' %}">Accueil</a>
                         <a class="nav-item nav-link" href="{% url 'reviews-ticket' %}">Demander une critique</a>
                         <a class="nav-item nav-link" href="{% url 'reviews-mesPosts' %}">mes Posts</a>
                     </div>
@@ -57,17 +57,6 @@
                 </div>
             </div>
         </nav>
-        <!-- <div class="menu">
-            <nav>
-                <ul>
-                    <li><a href="{% url 'reviews-accueil' %}">accueil</a></li>
-                    <li><a href="#flux">flux</a></li>
-                    <li><a href="#posts">posts</a></li>
-                    <li><a href="#abonnements">abonnements</a></li>
-                    <li><a href="#se déconnecter">se déconnecter</a></li>
-                </ul>
-            </nav>
-        </div> -->
     </header>
 
     <main role="main" class="container">
@@ -86,10 +75,21 @@
             <div class="col-md-4">
                 <div class="content-section">
                     <h3>Mes rubriques</h3>
-                    <p class='text-muted'>Ajouter des li si besoin.
+                    <p class='text-muted'>Les usages de l'app:
                     <ul class="list-group">
-                        <li class="list-group-item list-group-item-light">Abonnements</li>
-                        <li class="list-group-item list-group-item-light">Mes posts</li>
+                        <li class="list-group-item list-group-item-light">S'inscrire</li>
+                        <li class="list-group-item list-group-item-light">Se connecter</li>
+                        <li class="list-group-item list-group-item-light">Demander un avis <br>
+                            (ticket)</li>
+                        <li class="list-group-item list-group-item-light">Donner un avis <br>
+                            (review suite à un ticket)</li>
+                        <li class="list-group-item list-group-item-light">Suivre ses posts <br>
+                            (modifier, supprimer)</li>
+                        <li class="list-group-item list-group-item-light">Suivre des utilisateurs <br>
+                            (afficher leurs posts/feed)</li>
+                        <li class="list-group-item list-group-item-light">Page abonnements <br>
+                            (afficher les utilisateurs suivis, s'abonner, se désabonner)</li>
+
                     </ul>
                     </p>
                 </div>

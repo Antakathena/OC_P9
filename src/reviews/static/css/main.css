@@ -93,3 +93,14 @@ footer {
         color: white;
     font-size: 1rem;
 }
+
+/* eviter l'étirement des images de profil */
+/* You can adjust the image size by increasing/decreasing the width, height */
+.custom-circle-image {
+  width: 20vw; /* note i used vw not px for better responsive */
+  height: 20vw;
+}
+
+.custom-circle-image img {
+  object-fit: cover;
+}

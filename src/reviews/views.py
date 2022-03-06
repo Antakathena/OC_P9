@@ -4,34 +4,28 @@ from django.template.loader import get_template
 from datetime import datetime
 
 from .models import Ticket, Review
+from itertools import chain
 
-dummy_tickets = [
-    {
-        'title' : "Madame Bovary",
-        'description' : "l'avez-vous lu?",
-        'user' : 'Lucie',
-        'time_created' : "21th march 2022",
-    },
-        {
-        'title' : "L'Alchimiste",
-        'description' : "l'avez-vous lu?",
-        'user' : 'Marc',
-        'time_created' : "23th march 2022"
-    },
-]
+from django.db.models import CharField, Value
+from django.shortcuts import render
 
-# dummy_reviews = [
-#     {
-#         'headline' : "Madame Bovary",
-#         'body' : "l'ennui personnifié",
-#         'user' : 'Marc',
-#     },
-#         {
-#         'headline' : "L'Alchimiste",
-#         'body' : "blablabla",
-#         'user' : 'Lucie',
-#     },
-# ]
+
+def feed(request):
+    reviews = get_users_viewable_reviews(request.user)  
+    # returns queryset of reviews
+    reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
+
+    tickets = get_users_viewable_tickets(request.user)
+    # returns queryset of tickets
+    tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+
+    # combine and sort the two types of posts
+    posts = sorted(
+        chain(reviews, tickets),
+        key=lambda post: post.time_created,
+        reverse=True
+    )
+    return render(request, 'feed.html', context={'posts': posts})
 
 # nb : ce serait bien de pouvoir afficher les tickets et critiques en faisant une
 # recherche par auteur, titre, etc. c'est quoi les champs déjà?
@@ -69,6 +63,13 @@ def ticket(request):
     template = get_template("ticket.html")
     page = template.render({"exemple": "coucou ! depuis views.py"})
     return HttpResponse(page)
+
+def review(request):
+    '''
+    créer un commentaire sur un ouvrage, éventuellement en réponse à un ticket
+    '''
+
+    return render(request,"reviews/review.html", context = {'ouvrage':'Madame Bovary'})
 
 def critique(request):
     """
