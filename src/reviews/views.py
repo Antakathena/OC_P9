@@ -1,15 +1,25 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template.loader import get_template
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView
+    )
+from django.db.models import CharField, Value
+from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
 from datetime import datetime
 
 from .models import Ticket, Review
 from itertools import chain
 
-from django.db.models import CharField, Value
-from django.shortcuts import render
 
 
+"""
 def feed(request):
     reviews = get_users_viewable_reviews(request.user)  
     # returns queryset of reviews
@@ -26,43 +36,85 @@ def feed(request):
         reverse=True
     )
     return render(request, 'feed.html', context={'posts': posts})
+"""
 
 # nb : ce serait bien de pouvoir afficher les tickets et critiques en faisant une
 # recherche par auteur, titre, etc. c'est quoi les champs déjà?
 
 def home(request):
     """
-    vue basée sur le tuto : https://www.youtube.com/watch?v=qDwdMDQ8oX4
-    dans un dossier appName -> templates -> appName selon la convention Django
-    """
-    context = {
-        'title':'home',
-        'prenom':'Sophie',
-        'tickets': Ticket.objects.all(),
-    }
-    return render(request,"reviews/home.html", context )
-    
-def accueil(request):
-    """
+    A terme :
     présentation du site et menu détaillé
     possibilité de se connecter
     renvoi vers ou possibilité de s'inscrire
     """
-    return render(request,"reviews/accueil.html")
-
-
-def ticket(request):
-    """
-    poster un ticket pour demander une critique
-    """
-    # donc un input/formulaire qui permet de saisir une demande qui sera ajoutée
-    # à la db avec l'information de la date, l'auteur, etc. pour pouvoir la retrouver
-    # ce ticket sera affiché sur la page des utilisateurs abonnés
     date = datetime.today()
-    return render(request,"reviews/ticket.html", context = {'prenom':'Sophie','date':date})
-    template = get_template("ticket.html")
-    page = template.render({"exemple": "coucou ! depuis views.py"})
-    return HttpResponse(page)
+    context = {
+        'title':'home',
+        'prenom':'Sophie',
+        'date': date,
+        'tickets': Ticket.objects.all(),
+    }
+    return render(request,"reviews/home.html", context )
+
+class TicketListView(ListView):
+    """
+    Affiche les tickets créés.
+    Remplace def ticket-list(request): return render(request,"reviews/home.html", context = {'tickets': Ticket.objects.all()})
+    vue basée sur le tuto : https://www.youtube.com/watch?v=qDwdMDQ8oX4
+    dans un dossier appName -> templates -> appName selon la convention Django
+    """
+    model = Ticket
+    template_name = 'reviews/tickets.html' # à indiquer si le template n'est pas nommé : <app>/<model>_<viewtype>.html
+    context_object_name = 'tickets' # à indiquer si pas list.objects (vérif nom)
+    ordering = ['-time_created'] # le "-" au début inverse l'ordre
+
+class TicketDetailView(DetailView):
+    """Affiche un ticket"""
+    model = Ticket
+
+
+class TicketCreateView(LoginRequiredMixin, CreateView):
+    """Créer un ticket"""
+    # ce ticket devra être affiché sur la page des utilisateurs abonnés
+    model = Ticket
+    fields = ['title', 'description']
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class TicketUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Update un ticket"""
+    # ce ticket devra être modifié sur la page des utilisateurs abonnés
+    model = Ticket
+    fields = ['title', 'description']
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.user:
+            return True
+        return False
+        # à écrire en 1 ligne ou laisser pour plus de lisibilité?
+
+class TicketDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """Supprimer un ticket"""
+    # ce ticket devra être supprimé de la page des utilisateurs abonnés
+    model = Ticket
+    success_url = "/home/"
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.user:
+            return True
+        return False
+        # à écrire en 1 ligne ou laisser pour plus de lisibilité?
+        
 
 def review(request):
     '''
