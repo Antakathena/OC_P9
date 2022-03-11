@@ -27,13 +27,11 @@
 
 <body>
     <header class="site-header">
-        <a class="nav-item nav-link" href="{% url 'reviews-home' %}">
-            <h1>LITReview</h1>
-        </a>
-        <!-- pourquoi ça ne marche pas quand on clique sur le h1? -->
+
         <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
             <div class="container">
-                <a class="navbar-brand mr-4" href="/">LITReview</a>
+                <!-- <h1>LITReview</h1> -->
+                <a class="navbar-brand mr-4" href="{% url 'reviews-home' %}">LITReview</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
                     aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -41,14 +39,17 @@
                 <div class="collapse navbar-collapse" id="navbarToggle">
                     <div class="navbar-nav mr-auto">
                         <a class="nav-item nav-link" href="{% url 'reviews-home' %}">Accueil</a>
-                        <a class="nav-item nav-link" href="{% url 'reviews-ticket' %}">Demander une critique</a>
-                        <a class="nav-item nav-link" href="{% url 'reviews-mesPosts' %}">mes Posts</a>
+
                     </div>
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav">
                         {% if user.is_authenticated %}
-                        <a class="nav-item nav-link" href="{% url 'profile' %}">Profil</a>
+                        <a class="nav-item nav-link" href="{% url 'reviews-ticketList' %}">Les Tickets (futur mon
+                            flux)</a>
+                        <a class="nav-item nav-link" href="{% url 'ticket-create' %}">Poster une demande</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Se déconnecter</a>
+                        <a class="nav-item nav-link" href="{% url 'profile' %}">Profil</a>
+
                         {% else %}
                         <a class="nav-item nav-link" href="{% url 'login' %}">Se connecter</a>
                         <a class="nav-item nav-link" href="{% url 'register' %}">Inscription</a>

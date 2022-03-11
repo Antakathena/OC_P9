@@ -1,21 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h1>Bienvenue sur LITReview</h1>
+<p>------------------Présentation du site----------------------</p>
+<p>Bonjour {{prenom|upper}}</p>
+<p>Aujourd'hui nous sommes le {{date|date:"d F Y"}}</p>
 
-<h2>Mes tickets</h2>
+<h2>Créer un ticket:</h2>
+<div class="demande"></div>
 
-{% for ticket in tickets %}
-<article class="media content-section">
-    <img class="rounded-circle article-img" src="{{ ticket.user.profile.image.url}}" alt="user profile image">
-    <div class="media-body">
-        <div class="article-metadata">
-            <a class="mr-2" href="#">{{ ticket.user }}</a>
-            <small class="text-muted">{{ ticket.time_created|date:"d F Y" }}</small>
-        </div>
-        <h2><a class="article-title" href="#">{{ ticket.title }}</a></h2>
-        <p class="article-content">{{ ticket.description }}</p>
-    </div>
-</article>
-{% endfor %}
+<h2>Nouveaux Posts :</h2>
+<p>afficher ici les nouveautés</p>
+
 
 {% endblock content %}
