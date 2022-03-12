@@ -43,10 +43,21 @@
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav">
                         {% if user.is_authenticated %}
+<<<<<<< HEAD
                         <a class="nav-item nav-link" href="{% url 'reviews-ticketList' %}">Les Tickets (séparer entre
                             feed et mes posts)</a>
+=======
+                        <a class="nav-item nav-link" href="{% url 'reviews-ticketList' %}">Les Tickets (futur mon
+                            flux)</a>
+                        <a class="nav-item nav-link" href="{% url 'ticket-create' %}">Poster une demande</a>
+<<<<<<< HEAD
+                        <a class="nav-item nav-link" href="{% url 'logout' %}">Se déconnecter</a>
+                        <a class="nav-item nav-link" href="{% url 'profile' %}">Profil</a>
+=======
+>>>>>>> 58e31156b46e9285eb5efa4607ad7bd2df5e0928
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profil</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Se déconnecter</a>
+>>>>>>> de4a9e1b5e23901d5a3b14874fd3af2564b06513
 
                         {% else %}
                         <a class="nav-item nav-link" href="{% url 'login' %}">Se connecter</a>
