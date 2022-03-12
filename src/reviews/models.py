@@ -4,6 +4,14 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
+'''
+class Topic(models.model):
+    # le sujet est un livre ou un article
+    title = models.CharField(max_length=128)
+    author = 
+    image = models.ImageField(null=True, blank=True)
+    time_written = 
+'''
 
 class Ticket(models.Model):
     title = models.CharField(max_length=128)
