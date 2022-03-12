@@ -1,20 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<div class="container">
-    <div class="row">
-        <div class="col text-center">
-            <a href="{% url 'ticket-create' %}" role="button" class="my-5 btn btn-outline-dark btn-lg">Demander une
-                critique</a>
-        </div>
-        <div class="col text-center">
-            <a href="#" role="button" class="my-5 btn btn-outline-dark btn-lg">Créer une critique</a>
-        </div>
-    </div>
-</div>
-<h2>Mes tickets</h2>
-{% for ticket in tickets %}
+<h2>Mes Reviews</h2>
+{% for review in reviews %}
+<!-- mettre à jour la vue en determinant la variable reviews -->
 <article class="media content-section">
     <img class="rounded-circle article-img" src="{{ ticket.user.profile.image.url}}" alt="user profile image">
     <div class="media-body">

@@ -49,6 +49,8 @@ def home(request):
     renvoi vers ou possibilité de s'inscrire
     """
     date = datetime.today()
+    # template = 'login'
+    # trouver comment gérer sub-template inheritance pour importer login
     context = {
         'title':'home',
         'prenom':'Sophie',
@@ -56,6 +58,7 @@ def home(request):
         'tickets': Ticket.objects.all(),
     }
     return render(request,"reviews/home.html", context )
+
 
 class TicketListView(ListView):
     """
@@ -69,6 +72,7 @@ class TicketListView(ListView):
     context_object_name = 'tickets' # à indiquer si pas list.objects (vérif nom)
     ordering = ['-time_created'] # le "-" au début inverse l'ordre
 
+
 class TicketDetailView(DetailView):
     """Affiche un ticket"""
     model = Ticket
@@ -78,7 +82,7 @@ class TicketCreateView(LoginRequiredMixin, CreateView):
     """Créer un ticket"""
     # ce ticket devra être affiché sur la page des utilisateurs abonnés
     model = Ticket
-    fields = ['title', 'description']
+    fields = ['title', 'description', 'image']
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -118,25 +122,14 @@ class TicketDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 def review(request):
     '''
-    créer un commentaire sur un ouvrage, éventuellement en réponse à un ticket
+    créer un commentaire sur un ouvrage, en réponse à un ticket
+    ou créer un ticket + commentaire associé dans le même geste
+    NB : le ticket doit être rapelé en bas de la critique
     '''
-
-    return render(request,"reviews/review.html", context = {'ouvrage':'Madame Bovary'})
-
-def critique(request):
-    """
-    poster une critique a propos d'un livre
-    """
-    return render(request,"reviews/critique.html", context = {'title':'critique','titre':'Madame Bovary'})
-
-def repondre(request):
-    """
-    poster une critique a propos d'un livre
-    en réponse à un ticket
-    """
     # donc pour ça il faut pouvoir cliquer sur un bouton répondre
     # en bas de chaque ticket qu'on lit
-    return HttpResponse('<h1>Répondre à une demande de critique</h1>')
+
+    return render(request,"reviews/review.html", context = {'title':'review','ouvrage':'Madame Bovary'})
 
 def mesPosts(request):
     """
@@ -152,21 +145,16 @@ def mesPosts(request):
     # return render(request,"mesPosts.html", context = {'tickets':tickets, 'critiques':critiques})
     return render(request,"reviews/mesPosts.html", context = {'tickets':tickets, 'critiques':reviews})
 
-def monFlux(request):
+def feed(request):
     """
     les tickets et critiques des utilisateurs auxquels je suis abonné
+    attention : exclure les posts de l'utilisateur connecté
     """
     # for utilisateur auquel je suis abonné, va chercher dans la base de donnée
     # ce qu'il a fait paraitre (donc il faut un tag "auteur"? comment c'est rangé dans la bd?)
     return HttpResponse('<h1>Mon Flux / Feed</h1>')
 
-def inscription(request):
-    """
-    formulaire d'inscription
-    """
-    # ça ça doit être du tout cuit dans Django, chercher
-    return HttpResponse('<h1>Inscription</h1>')
-    
+
 def abonnements(request):
     """
     page où je peux:

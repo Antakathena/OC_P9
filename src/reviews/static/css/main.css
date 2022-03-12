@@ -13,7 +13,7 @@ body {
   }
   
   .bg-steel {
-    background-color: #5f788a;
+    background-color: #d6d6d6;
   }
 
   .site-header {
@@ -21,7 +21,7 @@ body {
   }
   
   .site-header .navbar-nav .nav-link {
-    color: #cbd5db;
+    color: #000000;
   }
   
   .site-header .navbar-nav .nav-link:hover {
@@ -87,16 +87,6 @@ body {
     font-size: 2.5rem;
   }
 
-footer {
-    bottom: 0;
-    background-color: #5f788a;
-    display:flex;
-    flex-wrap:wrap;
-    justify-content: space-around;
-    min-width: 100%;
-        color: white;
-    font-size: 1rem;
-}
 
 /* eviter l'étirement des images de profil */
 /* You can adjust the image size by increasing/decreasing the width, height */
@@ -111,9 +101,18 @@ footer {
 
 /* A retirer si inutile */
 .demande {
-  width: 80%;
-  min-height: 20vh;
+  width: fit-content;
   height: fit-content;
-  border: 4px solid blue;
+  border: 2px solid rgb(0, 0, 0);
   margin: auto;
+  margin-bottom: 5vh;
+  text-align: center;
+}
+
+#accueil {
+  width: 600px;
+  height: fit-content;
+  border: 2px solid rgb(0, 0, 0);
+  margin: auto;
+  margin-bottom: 5vh;
 }

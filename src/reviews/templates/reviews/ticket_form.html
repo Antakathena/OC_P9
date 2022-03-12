@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+<!-- ça correspond à createView -->
 
 {% block content %}
 <h2>Créer une demande</h2>
 <div class="content-section">
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">Ticket</legend>

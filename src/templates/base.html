@@ -12,7 +12,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <link rel="stylesheet" type="text/css" href="{% static 'css/resetmeyer.css' %}">
-    <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"> -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 
     <!-- Bootstrap CSS -->
@@ -28,7 +27,7 @@
 <body>
     <header class="site-header">
 
-        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <nav class="navbar navbar-expand-md navbar-light bg-steel fixed-top">
             <div class="container">
                 <!-- <h1>LITReview</h1> -->
                 <a class="navbar-brand mr-4" href="{% url 'reviews-home' %}">LITReview</a>
@@ -39,14 +38,13 @@
                 <div class="collapse navbar-collapse" id="navbarToggle">
                     <div class="navbar-nav mr-auto">
                         <a class="nav-item nav-link" href="{% url 'reviews-home' %}">Accueil</a>
-
+                        <!-- diriger différemment selon que user connecté ou pas : vers connexion ou vers feed -->
                     </div>
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav">
                         {% if user.is_authenticated %}
-                        <a class="nav-item nav-link" href="{% url 'reviews-ticketList' %}">Les Tickets (futur mon
-                            flux)</a>
-                        <a class="nav-item nav-link" href="{% url 'ticket-create' %}">Poster une demande</a>
+                        <a class="nav-item nav-link" href="{% url 'reviews-ticketList' %}">Les Tickets (séparer entre
+                            feed et mes posts)</a>
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profil</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Se déconnecter</a>
 
@@ -61,8 +59,8 @@
     </header>
 
     <main role="main" class="container">
-        <div class="row">
-            <div class="col-md-8">
+        <div>
+            <div class="col-auto">
                 {% if messages %}
                 {% for message in messages %}
                 <div class="alert alert-{{message.tags}} ">
@@ -73,31 +71,9 @@
                 {% endif %}
                 {% block content %}{% endblock %}
             </div>
-            <div class="col-md-4">
-                <div class="content-section">
-                    <h3>Mes rubriques</h3>
-                    <p class='text-muted'>Les usages de l'app:
-                    <ul class="list-group">
-                        <li class="list-group-item list-group-item-light">S'inscrire</li>
-                        <li class="list-group-item list-group-item-light">Se connecter</li>
-                        <li class="list-group-item list-group-item-light">Demander un avis <br>
-                            (ticket)</li>
-                        <li class="list-group-item list-group-item-light">Donner un avis <br>
-                            (review suite à un ticket)</li>
-                        <li class="list-group-item list-group-item-light">Suivre ses posts <br>
-                            (modifier, supprimer)</li>
-                        <li class="list-group-item list-group-item-light">Suivre des utilisateurs <br>
-                            (afficher leurs posts/feed)</li>
-                        <li class="list-group-item list-group-item-light">Page abonnements <br>
-                            (afficher les utilisateurs suivis, s'abonner, se désabonner)</li>
 
-                    </ul>
-                    </p>
-                </div>
-            </div>
         </div>
     </main>
-    <footer class="page-footer font-small blue text-center">LITReview</footer>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

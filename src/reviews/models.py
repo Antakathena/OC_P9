@@ -3,6 +3,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from PIL import Image
 
 '''
 class Topic(models.model):
@@ -17,7 +18,7 @@ class Ticket(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField(max_length=2048, blank=True)
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True, upload_to='cover_pics')
     time_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -28,6 +29,17 @@ class Ticket(models.Model):
 
     # redirect renvoie à une adresse specifique
     # reverse va seulement donner l'adresse en string à la vue
+    def save(self, *args, **kwargs):
+        """
+        surcharge la méthode existante pour retrecir les images trop grandes
+        """
+        super(Ticket,self).save(*args, **kwargs)
+
+        img = Image.open(self.image.path)
+        if img.height > 300 or img.width > 300:
+            output_size = (300,300)
+            img.thumbnail(output_size)
+            img.save(self.image.path)
 
 
 class Review(models.Model):
