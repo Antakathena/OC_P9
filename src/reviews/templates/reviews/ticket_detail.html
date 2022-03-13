@@ -3,26 +3,32 @@
 {% block content %}
 <div class="container">
     <article class="media content-section">
-        <!-- <img class="rounded-circle article-img" src="{{ object.user.profile.image.url}}" alt="user profile image"> -->
-        <div class="media-body">
+        <div class="media-body align-top">
             <div class="article-metadata">
-                <a class="mr-2" href="#">{{ object.user }}</a>
+                <h4>{{ object.user }}</h4>
                 <small class="text-muted">{{ object.time_created|date:"d F Y" }}</small>
 
                 {% if object.user == user %}
-                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'ticket-update' object.id%}">modifier</a>
-                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'ticket-delete' object.id%}">Effacer</a>
+                <a class="mx-2 float-right btn btn-secondary btn-sm mt-1 mb-1"
+                    href="{% url 'ticket-update' object.id%}">modifier</a>
+                <a class="float-right btn btn-danger btn-sm mt-1 mb-1"
+                    href="{% url 'ticket-delete' object.id%}">Effacer</a>
                 {% endif %}
             </div>
-            <h2 class="article-title">{{ object.title }}</h2>
-            <p class="article-content">{{ object.description }}</p>
+            <div id="texte-du-ticket" class="row mt-3">
+                <h2 class="article-title col-12">{{ object.title }}</h2>
+                <p class="article-content col-12">{{ object.description }}</p>
+            </div>
         </div>
-        {% if object.image %}
-        <img class="img-thumbnail float-right" src="{{ object.image.url}}" alt="book cover">
-        {% else %}
-        {% endif %}
+        <a class="mr-5 align-self-end btn btn-secondary btn-sm mt-1 mb-1" href="{% url'review-create' %}">Répondre</a>
+        <div class="media">
+            {% if object.image %}
+            <img class=" img-thumbnail" src="{{ object.image.url}}" alt="book cover">
+            {% else %}
+            {% endif %}
+        </div>
 
-        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="#">Répondre</a>
+
     </article>
 </div>
 {% endblock content %}

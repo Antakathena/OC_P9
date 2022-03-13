@@ -26,9 +26,9 @@ class Ticket(models.Model):
 
     def get_absolute_url(self):
         return reverse('reviews-ticket-detail', kwargs={'pk': self.pk})
-
     # redirect renvoie à une adresse specifique
     # reverse va seulement donner l'adresse en string à la vue
+
     def save(self, *args, **kwargs):
         """
         surcharge la méthode existante pour retrecir les images trop grandes

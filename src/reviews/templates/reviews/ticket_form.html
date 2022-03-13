@@ -15,5 +15,11 @@
             <button class="btn btn-outline-info" type="submit">Editer</button>
         </div>
     </form>
+    {% if object.image %}
+    <div class="media float-left">
+        <img class="img-thumbnail" src="{{ object.image.url}}" alt="book cover">
+    </div>
+    {% else %}
+    {% endif %}
 </div>
 {% endblock content %}

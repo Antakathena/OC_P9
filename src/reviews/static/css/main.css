@@ -8,6 +8,10 @@ body {
     color: #444444;
   }
   
+  h4 {
+    font-family: Georgia, 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif ;
+  }
+
   ul {
     margin: 0;
   }
