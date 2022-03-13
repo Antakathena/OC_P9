@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'reviews.apps.ReviewsConfig', # 'reviews' suffit mais là c'est la Classe dans app.py
     'users.apps.UsersConfig',
     'crispy_forms',
+    'star_ratings'
 ]
 
 MIDDLEWARE = [

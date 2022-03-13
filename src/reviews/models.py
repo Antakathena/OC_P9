@@ -56,6 +56,9 @@ class Review(models.Model):
     def __str__(self):
         return f"{self.headline}, commentaire par {self.user}"
 
+    def get_absolute_url(self):
+        return reverse('review-detail', kwargs={'pk': self.pk})
+
 
 class UserFollows(models.Model):
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='following')

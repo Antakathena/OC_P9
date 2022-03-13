@@ -1,20 +1,45 @@
 {% extends "base.html" %}
+{% load ratings %}
 
 {% block content %}
 <h2>Mes Reviews</h2>
-{% for review in reviews %}
-<!-- mettre à jour la vue en determinant la variable reviews -->
-<article class="media content-section">
-    <img class="rounded-circle article-img" src="{{ ticket.user.profile.image.url}}" alt="user profile image">
-    <div class="media-body">
-        <div class="article-metadata">
-            <a class="mr-2" href="#">{{ ticket.user }}</a>
-            <small class="text-muted">{{ ticket.time_created|date:"d F Y" }}</small>
+{% for review in object_list %}
+<div class="container w-80 m-auto">
+    <article id="cadre-exterieur" class="media content-section">
+        <div class="row m-auto ">
+            <div class="row m-auto ">
+                <p class="col-lg-12">{{review.user}} a publié une critique</p>
+                <div id="critique" class="col-lg-12 mx-auto">
+                    <div class="article-metadata">
+                        <small class="float-right text-muted">{{review.time_created|date:"H:i, d F Y"}}</small>
+                    </div>
+                    <div class="row mt-3">
+                        <p class="pl-2 col-9">{{review.headline}}</p>
+                        <p class="col-3">rating ={{review.rating}}</p>
+                        <p class="pl-2 article-content">{{review.body}}</p>
+                    </div>
+                </div>
+            </div>
+            <div id="enReponseA" class="w-100 content-section mx-auto row m-auto ">
+                <p class=" w-100">En réponse à {{ review.ticket.user }}</p>
+                <div class="col">
+                    <div class="article-metadata">
+                        <small class="float-right text-muted">{{ review.ticket.time_created|date:"H:i, d F Y"}}
+                        </small>
+                    </div>
+                    <p>{{ review.ticket.title }} :</p>
+                    <p class="article-content">{{ review.ticket.description }}</p>
+                    {% if review.ticket.image %}
+                    <div class="media">
+                        <img class="img-thumbnail float-right" src="{{ review.ticket.image.url}}" alt="book cover">
+                    </div>
+                    {% else %}
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        <h2><a class="article-title" href="{% url 'reviews-ticket-detail' ticket.id  %}">{{ ticket.title }}</a></h2>
-        <p class="article-content">{{ ticket.description }}</p>
-    </div>
-</article>
+    </article>
+</div>
 {% endfor %}
 
 {% endblock content %}

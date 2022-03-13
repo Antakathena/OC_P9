@@ -5,7 +5,10 @@ from .views import (TicketListView,
 TicketDetailView,
 TicketCreateView,
 TicketUpdateView,
-TicketDeleteView
+TicketDeleteView,
+ReviewCreateView,
+ReviewListView,
+ReviewDetailView
 )
 
 
@@ -17,4 +20,7 @@ urlpatterns = [
     path("demande", TicketCreateView.as_view(), name = "ticket-create"),
     path("ticket/<pk>/update/", TicketUpdateView.as_view(), name = "ticket-update"),
     path("ticket/<pk>/delete/", TicketDeleteView.as_view(), name = "ticket-delete"),
+    path("review/create", ReviewCreateView.as_view(), name = "review-create"),
+    path('reviews', ReviewListView.as_view(), name = "reviewsList"),
+    path("ticket/<pk>/", ReviewDetailView.as_view(), name = "review-detail"),
 ]

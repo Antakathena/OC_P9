@@ -6,7 +6,8 @@ from django.views.generic import (
     DetailView,
     CreateView,
     UpdateView,
-    DeleteView
+    DeleteView,
+    TemplateView
     )
 from django.db.models import CharField, Value
 from django.shortcuts import render
@@ -83,6 +84,7 @@ class TicketCreateView(LoginRequiredMixin, CreateView):
     # ce ticket devra être affiché sur la page des utilisateurs abonnés
     model = Ticket
     fields = ['title', 'description', 'image']
+    extra_context = {'action':"Créer votre ticket"}
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -93,7 +95,8 @@ class TicketUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Update un ticket"""
     # ce ticket devra être modifié sur la page des utilisateurs abonnés
     model = Ticket
-    fields = ['title', 'description']
+    fields = ['title', 'description', 'image']
+    extra_context = {'action':"Modifier votre ticket"}
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -119,6 +122,26 @@ class TicketDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return False
         # à écrire en 1 ligne ou laisser pour plus de lisibilité?
         
+
+class ReviewListView(ListView):
+    model = Review
+    # template_name = reviews/review_list.html (superflux)
+    ordering = ['-time_created'] # le "-" au début inverse l'ordre
+
+class ReviewCreateView(LoginRequiredMixin, CreateView):
+    """
+    """
+    model = Review
+    fields = ['ticket', 'rating', 'headline', 'body']
+    extra_context = {'action':"Ecrivez votre critique"}
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+class ReviewDetailView(DetailView):
+    """Affiche une review"""
+    model = Review
 
 def review(request):
     '''

@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <link rel="stylesheet" type="text/css" href="{% static 'css/resetmeyer.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
-
+    <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -43,21 +43,11 @@
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav">
                         {% if user.is_authenticated %}
-<<<<<<< HEAD
-                        <a class="nav-item nav-link" href="{% url 'reviews-ticketList' %}">Les Tickets (séparer entre
-                            feed et mes posts)</a>
-=======
                         <a class="nav-item nav-link" href="{% url 'reviews-ticketList' %}">Les Tickets (futur mon
                             flux)</a>
-                        <a class="nav-item nav-link" href="{% url 'ticket-create' %}">Poster une demande</a>
-<<<<<<< HEAD
-                        <a class="nav-item nav-link" href="{% url 'logout' %}">Se déconnecter</a>
-                        <a class="nav-item nav-link" href="{% url 'profile' %}">Profil</a>
-=======
->>>>>>> 58e31156b46e9285eb5efa4607ad7bd2df5e0928
+                        <a class="nav-item nav-link" href="{% url 'reviewsList' %}">Les Reviews</a>
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profil</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Se déconnecter</a>
->>>>>>> de4a9e1b5e23901d5a3b14874fd3af2564b06513
 
                         {% else %}
                         <a class="nav-item nav-link" href="{% url 'login' %}">Se connecter</a>
@@ -97,6 +87,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    <!-- star-ratings -->
+    <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
 
 </body>
 
