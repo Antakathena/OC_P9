@@ -15,18 +15,21 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from datetime import datetime
 
+from .forms import TicketForm, ReviewForm
+
 from .models import Ticket, Review
 from itertools import chain
 
 
 
-"""
 def feed(request):
-    reviews = get_users_viewable_reviews(request.user)  
+    date= datetime.today()
+    username= request.user.username  #???
+    reviews = Review.objects.all()
     # returns queryset of reviews
     reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
 
-    tickets = get_users_viewable_tickets(request.user)
+    tickets = Ticket.objects.all()
     # returns queryset of tickets
     tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
 
@@ -36,13 +39,34 @@ def feed(request):
         key=lambda post: post.time_created,
         reverse=True
     )
-    return render(request, 'feed.html', context={'posts': posts})
+    context = {
+        'title':'home',
+        'prenom': username,
+        'date': date,
+        'posts': posts,
+    }
+    return render(request, 'reviews/feed.html', context)
+
+"""
+class FeedView(ListView):
+    model = Ticket
+    template_name = 'feed.html'
+    context_object_name = 'ticket_list'
+
+    def get_context_data(self, **kwargs):
+        context = super(FeedView, self).get_context_data(**kwargs)
+        context.update({
+            'reviews': Review.objects.order_by('-time_created'),
+            'more_context': Review.objects.all(),
+        })
+        return context
+
+    def get_queryset(self):
+        return Ticket.objects.order_by('-time_created')
 """
 
-# nb : ce serait bien de pouvoir afficher les tickets et critiques en faisant une
-# recherche par auteur, titre, etc. c'est quoi les champs déjà?
 
-def home(request):
+def connect(request):
     """
     A terme :
     présentation du site et menu détaillé
@@ -58,8 +82,7 @@ def home(request):
         'date': date,
         'tickets': Ticket.objects.all(),
     }
-    return render(request,"reviews/home.html", context )
-
+    return render(request,"reviews/connect.html", context )
 
 class TicketListView(ListView):
     """
@@ -69,7 +92,7 @@ class TicketListView(ListView):
     dans un dossier appName -> templates -> appName selon la convention Django
     """
     model = Ticket
-    template_name = 'reviews/tickets.html' # à indiquer si le template n'est pas nommé : <app>/<model>_<viewtype>.html
+    # template_name = 'reviews/monfichier.html' à indiquer si le template n'est pas nommé : <app>/<model>_<viewtype>.html
     context_object_name = 'tickets' # à indiquer si pas list.objects (vérif nom)
     ordering = ['-time_created'] # le "-" au début inverse l'ordre
 
@@ -77,13 +100,14 @@ class TicketListView(ListView):
 class TicketDetailView(DetailView):
     """Affiche un ticket"""
     model = Ticket
+    context_object_name = 'ticket'
 
 
 class TicketCreateView(LoginRequiredMixin, CreateView):
     """Créer un ticket"""
     # ce ticket devra être affiché sur la page des utilisateurs abonnés
     model = Ticket
-    fields = ['title', 'description', 'image']
+    form_class = TicketForm
     extra_context = {'action':"Créer votre ticket"}
 
     def form_valid(self, form):
@@ -95,7 +119,7 @@ class TicketUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Update un ticket"""
     # ce ticket devra être modifié sur la page des utilisateurs abonnés
     model = Ticket
-    fields = ['title', 'description', 'image']
+    form_class = TicketForm
     extra_context = {'action':"Modifier votre ticket"}
 
     def form_valid(self, form):
@@ -113,46 +137,72 @@ class TicketDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Supprimer un ticket"""
     # ce ticket devra être supprimé de la page des utilisateurs abonnés
     model = Ticket
-    success_url = "/home/"
+    success_url = "/"
 
     def test_func(self):
         post = self.get_object()
         if self.request.user == post.user:
             return True
         return False
-        # à écrire en 1 ligne ou laisser pour plus de lisibilité?
         
 
-class ReviewListView(ListView):
+class ReviewListView(LoginRequiredMixin, ListView):
     model = Review
-    # template_name = reviews/review_list.html (superflux)
+    # template_name = reviews/review_list.html (superflux si son nom a la bonne syntaxe)
     ordering = ['-time_created'] # le "-" au début inverse l'ordre
+
+
+class ReviewDetailView(LoginRequiredMixin, DetailView):
+    """Affiche une review"""
+    model = Review
 
 class ReviewCreateView(LoginRequiredMixin, CreateView):
     """
+    créer un commentaire sur un ouvrage, en réponse à un ticket
+    ou créer un ticket + commentaire associé dans le même geste
+    NB : le ticket doit être rappelé en bas de la critique
     """
     model = Review
-    fields = ['ticket', 'rating', 'headline', 'body']
+    form_class = ReviewForm
+    # fields = ['ticket', 'rating', 'headline', 'body'] quand il n'y a rien à spécifier,
+    # sinon, form dans form.py
     extra_context = {'action':"Ecrivez votre critique"}
     
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
-class ReviewDetailView(DetailView):
-    """Affiche une review"""
+class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Update une critique"""
+
     model = Review
+    form_class = ReviewForm
+    extra_context = {'action':"Modifier votre critique"}
 
-def review(request):
-    '''
-    créer un commentaire sur un ouvrage, en réponse à un ticket
-    ou créer un ticket + commentaire associé dans le même geste
-    NB : le ticket doit être rapelé en bas de la critique
-    '''
-    # donc pour ça il faut pouvoir cliquer sur un bouton répondre
-    # en bas de chaque ticket qu'on lit
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
-    return render(request,"reviews/review.html", context = {'title':'review','ouvrage':'Madame Bovary'})
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.user:
+            return True
+        return False
+
+
+class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """Supprimer une critique"""
+    
+    model = Review
+    success_url = "/" 
+    # ou "/feed/" ?
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.user:
+            return True
+        return False
+        
 
 def mesPosts(request):
     """
@@ -167,16 +217,6 @@ def mesPosts(request):
     reviews = Review.objects.all()
     # return render(request,"mesPosts.html", context = {'tickets':tickets, 'critiques':critiques})
     return render(request,"reviews/mesPosts.html", context = {'tickets':tickets, 'critiques':reviews})
-
-def feed(request):
-    """
-    les tickets et critiques des utilisateurs auxquels je suis abonné
-    attention : exclure les posts de l'utilisateur connecté
-    """
-    # for utilisateur auquel je suis abonné, va chercher dans la base de donnée
-    # ce qu'il a fait paraitre (donc il faut un tag "auteur"? comment c'est rangé dans la bd?)
-    return HttpResponse('<h1>Mon Flux / Feed</h1>')
-
 
 def abonnements(request):
     """

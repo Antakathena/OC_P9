@@ -29,27 +29,24 @@
 
         <nav class="navbar navbar-expand-md navbar-light bg-steel fixed-top">
             <div class="container">
-                <!-- <h1>LITReview</h1> -->
-                <a class="navbar-brand mr-4" href="{% url 'reviews-home' %}">LITReview</a>
+                <a class="navbar-brand mr-4" href="#">LITReview</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
                     aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarToggle">
                     <div class="navbar-nav mr-auto">
-                        <a class="nav-item nav-link" href="{% url 'reviews-home' %}">Accueil</a>
-                        <!-- diriger différemment selon que user connecté ou pas : vers connexion ou vers feed -->
                     </div>
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav">
                         {% if user.is_authenticated %}
-                        <a class="nav-item nav-link" href="{% url 'reviews-ticketList' %}">Les Tickets (futur mon
-                            flux)</a>
-                        <a class="nav-item nav-link" href="{% url 'reviewsList' %}">Les Reviews</a>
+                        <a class="nav-item nav-link" href="{% url 'reviews-feed' %}">Accueil</a>
+                        <a class="nav-item nav-link" href="{% url 'reviews-ticket-list' %}">Les Tickets</a>
+                        <a class="nav-item nav-link" href="{% url 'reviews-review-list' %}">Les Reviews</a>
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profil</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Se déconnecter</a>
-
                         {% else %}
+                        <a class="nav-item nav-link" href="{% url 'reviews-connect' %}">Accueil</a>
                         <a class="nav-item nav-link" href="{% url 'login' %}">Se connecter</a>
                         <a class="nav-item nav-link" href="{% url 'register' %}">Inscription</a>
                         {% endif %}

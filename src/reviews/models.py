@@ -5,15 +5,6 @@ from django.db import models
 from django.urls import reverse
 from PIL import Image
 
-'''
-class Topic(models.model):
-    # le sujet est un livre ou un article
-    title = models.CharField(max_length=128)
-    author = 
-    image = models.ImageField(null=True, blank=True)
-    time_written = 
-'''
-
 class Ticket(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField(max_length=2048, blank=True)
@@ -57,7 +48,7 @@ class Review(models.Model):
         return f"{self.headline}, commentaire par {self.user}"
 
     def get_absolute_url(self):
-        return reverse('review-detail', kwargs={'pk': self.pk})
+        return reverse('reviews-review-detail', kwargs={'pk': self.pk})
 
 
 class UserFollows(models.Model):
@@ -67,6 +58,3 @@ class UserFollows(models.Model):
         # ensures we don't get multiple UserFollows instances
         # for unique user-user_followed pairs
         unique_together = ('user', 'followed_user', )
-
-# NB pour utiliser ImageField il a fallu installer python -m pip install Pillow
-# manque une classe/modèle 'followed_user' auquel fait référence unique together?

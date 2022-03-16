@@ -6,9 +6,15 @@
     <article id="cadre-exterieur" class="media content-section">
         <div class="row m-auto ">
             <div class="row m-auto ">
-
                 <h4 class="col-lg-2">{{object.user}}</h4>
                 <p class="col-lg-10"> a publié une critique</p>
+                <!-- les boutons pour pouvoir effacer et modifier -->
+                {% if object.user == user %}
+                <a class="mx-2 float-right btn btn-secondary btn-sm mt-1 mb-1"
+                    href="{% url 'review-update' object.id%}">modifier</a>
+                <a class="float-right btn btn-danger btn-sm mt-1 mb-1"
+                    href="{% url 'review-delete' object.id%}">Effacer</a>
+                {% endif %}
                 <div id="critique" class="col-lg-12 mx-auto">
                     <div class="article-metadata">
                         <small class="float-right text-muted">{{object.time_created|date:"H:i, d F Y"}}</small>

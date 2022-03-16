@@ -5,30 +5,28 @@
     <article class="media content-section">
         <div class="media-body align-top">
             <div class="article-metadata">
-                <h4>{{ object.user }}</h4>
-                <small class="text-muted">{{ object.time_created|date:"d F Y" }}</small>
-
-                {% if object.user == user %}
+                <h4>{{ ticket.user }}</h4>
+                <small class="text-muted">{{ ticket.time_created|date:"H:i, d F Y" }}</small>
+                <!-- les boutons pour pouvoir effacer et modifier -->
+                {% if ticket.user == user %}
                 <a class="mx-2 float-right btn btn-secondary btn-sm mt-1 mb-1"
-                    href="{% url 'ticket-update' object.id%}">modifier</a>
+                    href="{% url 'ticket-update' ticket.id %}">modifier</a>
                 <a class="float-right btn btn-danger btn-sm mt-1 mb-1"
-                    href="{% url 'ticket-delete' object.id%}">Effacer</a>
+                    href="{% url 'ticket-delete' ticket.id %}">Effacer</a>
                 {% endif %}
             </div>
             <div id="texte-du-ticket" class="row mt-3">
-                <h2 class="article-title col-12">{{ object.title }}</h2>
-                <p class="article-content col-12">{{ object.description }}</p>
+                <h2 class="article-title col-12">{{ ticket.title }}</h2>
+                <p class="article-content col-12">{{ ticket.description }}</p>
             </div>
         </div>
-        <a class="mr-5 align-self-end btn btn-secondary btn-sm mt-1 mb-1" href="{% url'review-create' %}">Répondre</a>
+        <a class="mr-5 align-self-end btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'review-create' %}">Répondre</a>
         <div class="media">
-            {% if object.image %}
-            <img class=" img-thumbnail" src="{{ object.image.url}}" alt="book cover">
+            {% if ticket.image %}
+            <img class=" img-thumbnail" src="{{ ticket.image.url}}" alt="book cover">
             {% else %}
             {% endif %}
         </div>
-
-
     </article>
 </div>
 {% endblock content %}

@@ -120,3 +120,12 @@ body {
   margin: auto;
   margin-bottom: 5vh;
 }
+
+/* tentative pour rendre les radios button de reviewForm horizontaux */
+ul.radio li{
+ display: inline-block;
+ }
+
+.radio {
+  background-color: red;
+}

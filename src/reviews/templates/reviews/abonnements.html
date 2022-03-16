@@ -1,5 +1,32 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Abonnements</h2>
+<div id="suivre-nouvel-utilisateur">
+    <h2>Suivre d'autres utilisateurs</h2>
+    <form method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <button type="submit">Confirmer</button>
+    </form>
+</div>
+
+<div id="utilisateurs-suivis">
+    <h2>Abonnements</h2>
+    {% for followed in object_list %}
+    <article class="media content-section">
+        <h4>{{ followed.username }}</h4>
+        <a class="mr-5 align-self-end btn btn-secondary btn-sm mt-1 mb-1" href="#">Désabonner</a>
+    </article>
+    {% endfor %}
+</div>
+
+<div id="utilisateurs-abonnés">
+    <h2>Abonnés</h2>
+    {% for following in object_list %}
+    <!-- soit templates différents à hériter soit spécifier object list dans la vue -->
+    <article class="media content-section">
+        <h4>{{ following.username }}</h4>
+    </article>
+    {% endfor %}
+</div>
 {% endblock content %}

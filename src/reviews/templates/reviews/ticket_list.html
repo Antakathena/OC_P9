@@ -2,18 +2,7 @@
 
 {% block content %}
 
-<div class="container">
-    <div class="row">
-        <div class="col text-center">
-            <a href="{% url 'ticket-create' %}" role="button" class="my-5 btn btn-outline-dark btn-lg">Demander une
-                critique</a>
-        </div>
-        <div class="col text-center">
-            <a href="{% url 'review-create' %}" role="button" class="my-5 btn btn-outline-dark btn-lg">Créer une
-                critique</a>
-        </div>
-    </div>
-</div>
+
 <h2>Mes tickets</h2>
 {% for ticket in tickets %}
 <article class="media content-section">

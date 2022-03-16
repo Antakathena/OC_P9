@@ -5,9 +5,34 @@ Use the 'include' tag to reuse ticket and review elements between pages -->
 ...
 <!-- Afficher les tickets et reviews des utilisateurs qu'on suit, 
 donc chercher les utilisateurs suivis et pour chacun afficher ses tickets et ses reviews -->
+
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col text-center">
+            <a href="{% url 'ticket-create' %}" role="button" class="my-5 btn btn-outline-dark btn-lg">Demander une
+                critique</a>
+        </div>
+        <div class="col text-center">
+            <a href="{% url 'review-create' %}" role="button" class="my-5 btn btn-outline-dark btn-lg">Créer une
+                critique</a>
+        </div>
+    </div>
+</div>
+<p>Bonjour {{user.username}}, Bienvenue sur ton feed</p>
+<p>Aujourd'hui nous sommes le {{date|date:"d F Y"}}</p>
+
 {% for post in posts %}
 {% if post.content_type == 'TICKET' %}
-{% include 'ticket_snippet.html' %}
+{% include 'reviews/ticket_detail.html' %}
+<!-- manque la variable à insérer ou bien? -->
 {% elif post.content_type == 'REVIEW' %}
-{% include 'review_snippet.html' %}
+{% include 'reviews/review_detail.html' %}
+<!-- manque la variable à insérer ou bien? -->
+{% endif %}
 {% endfor %}
+
+{% endblock content %}
