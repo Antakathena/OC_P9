@@ -2,12 +2,40 @@
 
 {% block content %}
 <div class="container">
-    <article class="media content-section">
-        <div class="media-body align-top">
+    <article id="cadre-exterieur" class="media content-section">
+        <div id="ticket" class="media-body align-top col-lg-12 mx-auto">
             <div class="article-metadata">
-                <h4>{{ object.user }}</h4>
                 <small class="text-muted">{{ object.time_created|date:"H:i, d F Y" }}</small>
+            </div>
+            <div class="media">
+                <img class="rounded-circle article-img" src="{{ object.user.profile.image.url}}"
+                    alt="user profile image">
+                <div class="media-body">
+                    <h4>{{ object.user }}</h4>
+                </div>
+            </div>
+            <div id="texte-du-object" class="row mt-3">
+                <h2 class="article-title col-12">{{ object.title }}</h2>
+                <p class="article-content col-12">{{ object.description }}</p>
+            </div>
+
+            <div class="media">
+                {% if object.image %}
+                <img class=" img-thumbnail" src="{{ object.image.url}}" alt="book cover">
+                {% else %}
+                <p>pas d'image donnée</p>
+                {% endif %}
+            </div>
+
+            <div id="les-boutons" class="float-end">
                 <!-- les boutons pour pouvoir effacer et modifier -->
+                {% if object not in answered %}
+                <a id="repondre" class="mr-5 align-self-end btn btn-secondary btn-sm mt-1 mb-1"
+                    href="{% url 'review-create' %}">Répondre</a>
+                <!-- trouver le if à mettre là pour recouper avec review et savoir si réponse il y a      -->
+                {% else %}
+                <p>Critique faite</p>
+                {% endif %}
                 {% if object.user == user %}
                 <a class="mx-2 float-right btn btn-secondary btn-sm mt-1 mb-1"
                     href="{% url 'ticket-update' object.id %}">modifier</a>
@@ -15,17 +43,6 @@
                     href="{% url 'ticket-delete' object.id %}">Effacer</a>
                 {% endif %}
             </div>
-            <div id="texte-du-object" class="row mt-3">
-                <h2 class="article-title col-12">{{ object.title }}</h2>
-                <p class="article-content col-12">{{ object.description }}</p>
-            </div>
-        </div>
-        <a class="mr-5 align-self-end btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'review-create' %}">Répondre</a>
-        <div class="media">
-            {% if object.image %}
-            <img class=" img-thumbnail" src="{{ object.image.url}}" alt="book cover">
-            {% else %}
-            {% endif %}
         </div>
     </article>
 </div>

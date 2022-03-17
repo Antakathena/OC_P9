@@ -62,6 +62,9 @@ class FeedListView(ListView):
         # add argt (self.request.user) quand on fera en fonction de l'auteur du post?
         # returns queryset of tickets
         tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+        answered = []
+        for review in reviews:
+            answered.append(review.ticket)
 
         # combine and sort the two types of posts
         posts = sorted(
@@ -78,12 +81,12 @@ class FeedListView(ListView):
             'prenom': username,
             'date': date,
             'posts': posts,
+            'answered': answered
         })
         return context
 
     def get_queryset(self):
         return Ticket.objects.order_by('-time_created')
-
 
 
 def connect(request):
@@ -104,6 +107,7 @@ def connect(request):
     }
     return render(request,"reviews/connect.html", context )
 
+
 class TicketListView(ListView):
     """
     Affiche les tickets créés.
@@ -120,6 +124,7 @@ class TicketListView(ListView):
 class TicketDetailView(DetailView):
     """Affiche un ticket"""
     model = Ticket
+    extra_context = {'reviews': Review.objects.all()}
 
 
 class TicketCreateView(LoginRequiredMixin, CreateView):
@@ -164,12 +169,10 @@ class TicketDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False
         
-
 class ReviewListView(LoginRequiredMixin, ListView):
     model = Review
     # template_name = reviews/review_list.html (superflux si son nom a la bonne syntaxe)
     ordering = ['-time_created'] # le "-" au début inverse l'ordre
-
 
 class ReviewDetailView(LoginRequiredMixin, DetailView):
     """Affiche une review"""
@@ -190,6 +193,7 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
 
 class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Update une critique"""

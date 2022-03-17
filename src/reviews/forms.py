@@ -20,7 +20,6 @@ class HorizontalRadioRenderer(forms.RadioSelect):
     def render(self):
         return mark_safe(u'\n'.join([u'%s\n' % w for w in self]))
 
-# comment faire que le choix de la note dans review se fasse avec un radio button?
 class ReviewForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ReviewForm, self).__init__(*args, **kwargs)
@@ -43,11 +42,12 @@ class TicketForm(forms.ModelForm):
         super(TicketForm, self).__init__(*args, **kwargs)
         self.fields['title'].label = "Veuillez indiquer le titre et l'auteur"
         self.fields['description'].label = "Formulez votre demande"
-
+        self.fields['image'].required = False
+        
     class Meta:
         model = Ticket
         fields = ('title', 'description', 'image')
         widgets = {
-            'description': forms.Textarea(attrs={"class":"textarea",'rows': '2'})
+            'description': forms.Textarea(attrs={"class":"textarea",'rows': '2'}),
         }
 

@@ -4,10 +4,67 @@
 
 <div class="container w-80 m-auto">
     <article id="cadre-exterieur" class="media content-section">
-        <div class="row m-auto ">
+        <div id="critique" class="col-lg-12 mx-auto">
+            <div class="article-metadata">
+                <small class="text-muted">{{object.time_created|date:"H:i, d F Y"}}</small>
+            </div>
             <div class="row m-auto ">
-                <h4 class="col-lg-2">{{object.user}}</h4>
-                <p class="col-lg-10"> a publié une critique</p>
+                <div class="row m-auto ">
+                    <div class="media">
+                        <img class="float-left rounded-circle article-img" src="{{ object.user.profile.image.url}}"
+                            alt="user profile image">
+                    </div>
+                    <div class="media-body row">
+                        <h4 class="col-lg-12">{{object.user}}</h4>
+                        <p class="col-lg-10"> a publié une critique</p>
+                    </div>
+                    <div class="row mt-3">
+                        <h4 class="pl-2 col-9 md-2">{{object.headline}}</h4>
+                        <div rating-value="{{object.rating}}" class="col-3">
+                            <label for="rating-inline">Note :</label>
+                            <span class="fa fa-star {% if object.rating > 0 %} checked {% endif %}"></span>
+                            <span class="fa fa-star {% if object.rating > 1 %} checked {% endif %}"></span>
+                            <span class="fa fa-star {% if object.rating > 2 %} checked {% endif %}"></span>
+                            <span class="fa fa-star {% if object.rating > 3 %} checked {% endif %}"></span>
+                            <span class="fa fa-star {% if object.rating > 4 %} checked {% endif %}"></span>
+                        </div>
+                        <p class="pl-2 article-content text-justify">{{object.body}}</p>
+                    </div>
+                </div>
+            </div>
+            <div id="enReponseA" class="w-100 content-section mx-auto row m-auto ">
+                <div id="auteur-ticket" class="w-100 row">
+                    {% if object.user != object.ticket.user %}
+                    <p class="col-md-6">En réponse à la demande de :</p>
+                    <div class="media-body col-md">
+                        <h4 class="col text-center">{{ object.ticket.user }}</h4>
+                    </div>
+                    <div class="media col-md">
+                        <img class=" rounded-circle float-center article-img"
+                            src="{{ object.ticket.user.profile.image.url}}" alt="user profile image">
+                    </div>
+                    {% else %}
+                    <!-- si le ticket est du même auteur que la critique, on fait bref -->
+                    <p>A propos de</p>
+                    {% endif %}
+                </div>
+                <div id="corps-ticket" class="col text-justify">
+                    <div class="article-metadata">
+                        <small class="float-right text-muted">{{ object.ticket.time_created|date:"H:i, d F Y"}}
+                        </small>
+                    </div>
+                    <h4>{{ object.ticket.title }} :</h4>
+                    <p class="article-content">{{ object.ticket.description }}</p>
+                    {% if object.ticket.image %}
+                    <div class="media">
+                        <img class="img-thumbnail float-right" src="{{ object.ticket.image.url}}" alt="book cover">
+                    </div>
+                    {% else %}
+                    <p>pas d'image donnée</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div id="boutons-modifier-effacer">
                 <!-- les boutons pour pouvoir effacer et modifier -->
                 {% if object.user == user %}
                 <a class="mx-2 float-right btn btn-secondary btn-sm mt-1 mb-1"
@@ -15,35 +72,13 @@
                 <a class="float-right btn btn-danger btn-sm mt-1 mb-1"
                     href="{% url 'review-delete' object.id%}">Effacer</a>
                 {% endif %}
-                <div id="critique" class="col-lg-12 mx-auto">
-                    <div class="article-metadata">
-                        <small class="float-right text-muted">{{object.time_created|date:"H:i, d F Y"}}</small>
-                    </div>
-                    <div class="row mt-3">
-                        <p class="pl-2 col-9">{{object.headline}}</p>
-                        <p class="col-3">rating ={{object.rating}}</p>
-                        <p class="pl-2 article-content">{{object.body}}</p>
-                    </div>
-                </div>
-            </div>
-            <div id="enReponseA" class="w-100 content-section mx-auto row m-auto ">
-                <p class=" w-100">En réponse à {{ object.ticket.user }}</p>
-                <div class="col">
-                    <div class="article-metadata">
-                        <small class="float-right text-muted">{{ object.ticket.time_created|date:"H:i, d F Y"}}
-                        </small>
-                    </div>
-                    <p>{{ object.ticket.title }} :</p>
-                    <p class="article-content">{{ object.ticket.description }}</p>
-                    {% if object.ticket.image %}
-                    <div class="media">
-                        <img class="img-thumbnail float-right" src="{{ object.ticket.image.url}}" alt="book cover">
-                    </div>
-                    {% else %}
-                    {% endif %}
-                </div>
             </div>
         </div>
     </article>
 </div>
+
+<script>
+    var rating = parseInt("{{object.rating}}")
+    console.log(rating)
+</script>
 {% endblock content %}
