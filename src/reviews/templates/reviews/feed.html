@@ -10,6 +10,9 @@ donc chercher les utilisateurs suivis et pour chacun afficher ses tickets et ses
 {% extends "base.html" %}
 
 {% block content %}
+<p>Bonjour {{user.username}}, Bienvenue sur ton feed LITReview</p>
+<p>Aujourd'hui nous sommes le {{date|date:"d F Y"}}</p>
+
 <div class="container">
     <div class="row">
         <div class="col text-center">
@@ -22,16 +25,13 @@ donc chercher les utilisateurs suivis et pour chacun afficher ses tickets et ses
         </div>
     </div>
 </div>
-<p>Bonjour {{user.username}}, Bienvenue sur ton feed</p>
-<p>Aujourd'hui nous sommes le {{date|date:"d F Y"}}</p>
 
-{% for post in posts %}
-{% if post.content_type == 'TICKET' %}
+
+{% for object in posts %}
+{% if object.content_type == 'TICKET' %}
 {% include 'reviews/ticket_detail.html' %}
-<!-- manque la variable à insérer ou bien? -->
-{% elif post.content_type == 'REVIEW' %}
+{% elif object.content_type == 'REVIEW' %}
 {% include 'reviews/review_detail.html' %}
-<!-- manque la variable à insérer ou bien? -->
 {% endif %}
 {% endfor %}
 

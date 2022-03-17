@@ -11,13 +11,16 @@ ReviewCreateView,
 ReviewListView,
 ReviewDetailView,
 ReviewUpdateView,
-ReviewDeleteView
+ReviewDeleteView,
+FeedListView
 )
 
 
 urlpatterns = [
     path("connect/", views.connect, name = "reviews-connect"),
-    path("feed/", views.feed, name = "reviews-feed"),
+    # path("feed/", views.feed, name = "reviews-feed"),
+    path('feed/', FeedListView.as_view(), name = "reviews-feed"),
+
     path('ticket/list', TicketListView.as_view(), name = "reviews-ticket-list"),
     path("ticket/<pk>/", TicketDetailView.as_view(), name = "reviews-ticket-detail"),
     path("ticket/create", TicketCreateView.as_view(), name = "ticket-create"),

@@ -21,6 +21,7 @@ from .models import Ticket, Review
 from itertools import chain
 
 
+"""
 
 def feed(request):
     date= datetime.today()
@@ -34,13 +35,9 @@ def feed(request):
     tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
 
     # combine and sort the two types of posts
-    posts = sorted(
-        chain(reviews, tickets),
-        key=lambda post: post.time_created,
-        reverse=True
-    )
+    posts = sorted( chain(reviews, tickets),key=lambda post: post.time_created,reverse=True)
     context = {
-        'title':'home',
+        'title':'feed',
         'prenom': username,
         'date': date,
         'posts': posts,
@@ -48,22 +45,45 @@ def feed(request):
     return render(request, 'reviews/feed.html', context)
 
 """
-class FeedView(ListView):
+class FeedListView(ListView):
     model = Ticket
-    template_name = 'feed.html'
+    template_name = 'reviews/feed.html'
     context_object_name = 'ticket_list'
-
+    
+    
     def get_context_data(self, **kwargs):
-        context = super(FeedView, self).get_context_data(**kwargs)
+        date= datetime.today()
+        username= self.request.user.username
+        reviews = Review.objects.all()
+        # returns queryset of reviews
+        reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
+
+        tickets = Ticket.objects.all()
+        # add argt (self.request.user) quand on fera en fonction de l'auteur du post?
+        # returns queryset of tickets
+        tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+
+        # combine and sort the two types of posts
+        posts = sorted(
+        chain(reviews, tickets),
+        key=lambda post: post.time_created,
+        reverse=True
+    )
+
+        context = super(FeedListView, self).get_context_data(**kwargs)
         context.update({
             'reviews': Review.objects.order_by('-time_created'),
             'more_context': Review.objects.all(),
+            'title':'feed',
+            'prenom': username,
+            'date': date,
+            'posts': posts,
         })
         return context
 
     def get_queryset(self):
         return Ticket.objects.order_by('-time_created')
-"""
+
 
 
 def connect(request):
@@ -77,7 +97,7 @@ def connect(request):
     # template = 'login'
     # trouver comment gérer sub-template inheritance pour importer login
     context = {
-        'title':'home',
+        'title':'connect',
         'prenom':'Sophie',
         'date': date,
         'tickets': Ticket.objects.all(),
@@ -100,7 +120,6 @@ class TicketListView(ListView):
 class TicketDetailView(DetailView):
     """Affiche un ticket"""
     model = Ticket
-    context_object_name = 'ticket'
 
 
 class TicketCreateView(LoginRequiredMixin, CreateView):
