@@ -1,20 +1,25 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div id="suivre-nouvel-utilisateur">
     <h2>Suivre d'autres utilisateurs</h2>
-    <form method="post">
-        {{ form.as_p }}
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <button type="submit">Confirmer</button>
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">CKIKI suit KI ?</legend>
+            {{ form|crispy }}
+        </fieldset>
+        <div class="form-group">
+            <button type="submit">Confirmer</button>
     </form>
 </div>
 
 <div id="utilisateurs-suivis">
     <h2>Abonnements</h2>
-    {% for followed in object_list %}
+    {% for f in following %}
     <article class="media content-section">
-        <h4>{{ followed.username }}</h4>
+        <p>{{f}} </p>
         <a class="mr-5 align-self-end btn btn-secondary btn-sm mt-1 mb-1" href="#">Désabonner</a>
     </article>
     {% endfor %}
@@ -22,10 +27,10 @@
 
 <div id="utilisateurs-abonnés">
     <h2>Abonnés</h2>
-    {% for following in object_list %}
+    {% for f in followed_by %}
     <!-- soit templates différents à hériter soit spécifier object list dans la vue -->
     <article class="media content-section">
-        <h4>{{ following.username }}</h4>
+        <h4>{{f}}</h4>
     </article>
     {% endfor %}
 </div>

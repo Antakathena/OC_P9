@@ -2,6 +2,9 @@
 from django.urls import path
 from . import views
 from .views import (
+FollowCreateView,
+AnswerView,
+MyPostsListView,
 TicketListView,
 TicketDetailView,
 TicketCreateView,
@@ -12,7 +15,8 @@ ReviewListView,
 ReviewDetailView,
 ReviewUpdateView,
 ReviewDeleteView,
-FeedListView
+FeedListView,
+MyPostsListView
 )
 
 
@@ -20,12 +24,18 @@ urlpatterns = [
     path("connect/", views.connect, name = "reviews-connect"),
     # path("feed/", views.feed, name = "reviews-feed"),
     path('feed/', FeedListView.as_view(), name = "reviews-feed"),
+    path('myPosts/', MyPostsListView.as_view(), name = "reviews-myPosts"),
 
     path('ticket/list', TicketListView.as_view(), name = "reviews-ticket-list"),
     path("ticket/<pk>/", TicketDetailView.as_view(), name = "reviews-ticket-detail"),
     path("ticket/create", TicketCreateView.as_view(), name = "ticket-create"),
     path("ticket/<pk>/update/", TicketUpdateView.as_view(), name = "ticket-update"),
     path("ticket/<pk>/delete/", TicketDeleteView.as_view(), name = "ticket-delete"),
+
+    path("ticket/<pk>/answer/", AnswerView.as_view(), name = "answer"),
+    # si j'ajoute une page spéciale pour répondre à un ticket particulier (créer la CreateView etc.)
+
+    path("abonnements/", FollowCreateView.as_view(), name = "abonnements"),
 
     path('review/list', ReviewListView.as_view(), name = "reviews-review-list"),
     path("review/<pk>/", ReviewDetailView.as_view(), name = "reviews-review-detail"),

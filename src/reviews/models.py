@@ -4,6 +4,9 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from PIL import Image
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class Ticket(models.Model):
     title = models.CharField(max_length=128)
@@ -24,17 +27,19 @@ class Ticket(models.Model):
         """
         surcharge la méthode existante pour retrecir les images trop grandes
         """
-        if Ticket.image : # comment faire pour que l'image ne soit pas nécessaire malgré la surcharge?
+        try:
             super(Ticket,self).save(*args, **kwargs)
             img = Image.open(self.image.path)
             if img.height > 200 or img.width > 200:
                 output_size = (200,200)
                 img.thumbnail(output_size)
                 img.save(self.image.path)            
+        except ValueError:
+            _logger.debug("Pas d'image fournie")
 
 
 class Review(models.Model):
-    ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE)
+    ticket = models.ForeignKey(related_name= "review",to=Ticket, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(
         # validates that rating must be between 0 and 5
         validators=[MinValueValidator(0), MaxValueValidator(5)])
@@ -58,3 +63,10 @@ class UserFollows(models.Model):
         # ensures we don't get multiple UserFollows instances
         # for unique user-user_followed pairs
         unique_together = ('user', 'followed_user', )
+
+    def __str__(self):
+        if 'following':
+            return f"{self.user} suit {self.followed_user}"
+        else:
+            return f"{self.followed_user} est suivi par {self.user}"
+    

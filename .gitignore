@@ -1,3 +1,4 @@
 .env
 db.sqlite3
 .ToDo.txt
+settings_secret

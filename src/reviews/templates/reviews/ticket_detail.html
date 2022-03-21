@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div id="texte-du-object" class="row mt-3">
-                <h2 class="article-title col-12">{{ object.title }}</h2>
+                <h4 class="article-title col-12">{{ object.title }}</h4>
                 <p class="article-content col-12">{{ object.description }}</p>
             </div>
 
@@ -23,13 +23,15 @@
                 {% if object.image %}
                 <img class=" img-thumbnail" src="{{ object.image.url}}" alt="book cover">
                 {% else %}
-                <p>pas d'image donnée</p>
+
                 {% endif %}
             </div>
 
             <div id="les-boutons" class="float-end">
                 <!-- les boutons pour pouvoir effacer et modifier -->
                 {% if object not in answered %}
+                <!-- pour optimisation utiliser set qui prend moins de place qu'une liste -->
+
                 <a id="repondre" class="mr-5 align-self-end btn btn-secondary btn-sm mt-1 mb-1"
                     href="{% url 'review-create' %}">Répondre</a>
                 <!-- trouver le if à mettre là pour recouper avec review et savoir si réponse il y a      -->

@@ -1,8 +1,11 @@
+from plistlib import UID
 from django import forms
 from django.utils.safestring import mark_safe
+from django.db.models import Count
 
-
-from .models import Ticket, Review
+from django.contrib.auth.models import User
+from .models import Ticket, Review, UserFollows
+from users.models import Profile
 
 # key-value , key-Display value pairs (seen in the form).
 CHOICES=[
@@ -24,6 +27,7 @@ class ReviewForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ReviewForm, self).__init__(*args, **kwargs)
         self.fields['ticket'].label = "Vous répondez à"
+        self.fields['ticket'].queryset = Ticket.objects.annotate(nb_review=Count("review")).filter(nb_review=0)
         self.fields['rating'].label = "Donnez une note"
         self.fields['headline'].label = "Intitulé du commentaire"
         self.fields['body'].label = "Inscrivez votre commentaire"
@@ -51,3 +55,18 @@ class TicketForm(forms.ModelForm):
             'description': forms.Textarea(attrs={"class":"textarea",'rows': '2'}),
         }
 
+class FollowForm(forms.ModelForm):
+    def __init__(self, *args, username=None, following=None, **kwargs):
+        """ Username permet d'exclure de la liste des propositions l'utilisateur connecté
+        mais following ne fonctionne pas pour exclure ceux qu'on suit déjà.
+        C'est une liste mais __in devrait régler ce pb. Mais il y a user et followed_user à chaque fois"""
+        super(FollowForm, self).__init__(*args, **kwargs)
+        self.username = username
+        self.following = following
+        self.fields['user'].label = "Qui voulez vous suivre ?"
+        self.fields['user'].queryset = User.objects.all().exclude(username=self.username, following__in=following)
+        # # .annotate(nb_followed=Count("user")).filter(nb_followed=0)
+
+    class Meta:
+        model = UserFollows
+        fields = ('user',)

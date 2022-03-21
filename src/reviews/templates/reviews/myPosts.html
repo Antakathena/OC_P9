@@ -15,14 +15,16 @@ donc chercher les utilisateurs suivis et pour chacun afficher ses tickets et ses
     <p class="">Nous sommes le {{date|date:"d F Y"}}</p>
 </div>
 
-<div class="boite-a-boutons row">
-    <div class="col text-center">
-        <a href="{% url 'ticket-create' %}" role="button" class="my-5 btn btn-outline-dark btn-lg">Demander une
-            critique</a>
-    </div>
-    <div class="col text-center">
-        <a href="{% url 'review-create' %}" role="button" class="my-5 btn btn-outline-dark btn-lg">Créer une
-            critique</a>
+<div class="container">
+    <div class="row">
+        <div class="col text-center">
+            <a href="{% url 'ticket-create' %}" role="button" class="my-5 btn btn-outline-dark btn-lg">Demander une
+                critique</a>
+        </div>
+        <div class="col text-center">
+            <a href="{% url 'review-create' %}" role="button" class="my-5 btn btn-outline-dark btn-lg">Créer une
+                critique</a>
+        </div>
     </div>
 </div>
 

@@ -1,3 +1,4 @@
+from cProfile import Profile
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template.loader import get_template
@@ -12,44 +13,23 @@ from django.views.generic import (
 from django.db.models import CharField, Value
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-
-from datetime import datetime
-
-from .forms import TicketForm, ReviewForm
-
-from .models import Ticket, Review
 from itertools import chain
+from datetime import datetime
+from .forms import TicketForm, ReviewForm, FollowForm
+from .models import Ticket, Review, UserFollows
+from users.models import Profile
 
 
-"""
-
-def feed(request):
-    date= datetime.today()
-    username= request.user.username  #???
-    reviews = Review.objects.all()
-    # returns queryset of reviews
-    reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
-
-    tickets = Ticket.objects.all()
-    # returns queryset of tickets
-    tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
-
-    # combine and sort the two types of posts
-    posts = sorted( chain(reviews, tickets),key=lambda post: post.time_created,reverse=True)
-    context = {
-        'title':'feed',
-        'prenom': username,
-        'date': date,
-        'posts': posts,
-    }
-    return render(request, 'reviews/feed.html', context)
-
-"""
 class FeedListView(ListView):
+    """
+    Récupère les Reviews et les Tickets et les range du plus récent au plus vieux
+    En fait, j'ai fait comme si pas ListView et en commentaire,
+    def feed(request): ...     return render(request, 'reviews/feed.html', context)
+    comment il aurait vraiment fallu faire avec ListView
+    """
     model = Ticket
     template_name = 'reviews/feed.html'
-    context_object_name = 'ticket_list'
-    
+    # context_object_name = 'ticket_list'
     
     def get_context_data(self, **kwargs):
         date= datetime.today()
@@ -71,25 +51,25 @@ class FeedListView(ListView):
         chain(reviews, tickets),
         key=lambda post: post.time_created,
         reverse=True
-    )
+        )
 
         context = super(FeedListView, self).get_context_data(**kwargs)
         context.update({
-            'reviews': Review.objects.order_by('-time_created'),
-            'more_context': Review.objects.all(),
+            # 'reviews': Review.objects.order_by('-time_created'),
+            # 'more_context': Review.objects.all(),
             'title':'feed',
-            'prenom': username,
+            'username': username,
             'date': date,
             'posts': posts,
             'answered': answered
         })
         return context
 
-    def get_queryset(self):
-        return Ticket.objects.order_by('-time_created')
+    # def get_queryset(self):
+    #     return Ticket.objects.order_by('-time_created')
 
 
-def connect(request):
+def connect(request): # ou templateView?
     """
     A terme :
     présentation du site et menu détaillé
@@ -155,7 +135,7 @@ class TicketUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if self.request.user == post.user:
             return True
         return False
-        # à écrire en 1 ligne ou laisser pour plus de lisibilité?
+
 
 class TicketDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Supprimer un ticket"""
@@ -169,14 +149,17 @@ class TicketDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False
         
+
 class ReviewListView(LoginRequiredMixin, ListView):
     model = Review
     # template_name = reviews/review_list.html (superflux si son nom a la bonne syntaxe)
     ordering = ['-time_created'] # le "-" au début inverse l'ordre
 
+
 class ReviewDetailView(LoginRequiredMixin, DetailView):
     """Affiche une review"""
     model = Review
+
 
 class ReviewCreateView(LoginRequiredMixin, CreateView):
     """
@@ -213,6 +196,19 @@ class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return False
 
 
+class AnswerView(LoginRequiredMixin, UpdateView):
+    """Update une critique"""
+
+    model = Review
+    form_class = ReviewForm
+    extra_context = {'action':"Repondez à la demande"}
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+
+        return super().form_valid(form)
+
+
 class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Supprimer une critique"""
     
@@ -227,28 +223,95 @@ class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return False
         
 
-def mesPosts(request):
+class MyPostsListView(ListView):
     """
     tous mes tickets et critiques pour pouvoir :
     suivre les réponses (même de gens auxquels je ne suis pas abonné),
     les modifier et
     les supprimer
     """
-    #quelque chose comme for ticket in ticket + for critique in critique
-    # (ajouter au context?) l'afficher dans la page
-    tickets = Ticket.objects.all()
-    reviews = Review.objects.all()
-    # return render(request,"mesPosts.html", context = {'tickets':tickets, 'critiques':critiques})
-    return render(request,"reviews/mesPosts.html", context = {'tickets':tickets, 'critiques':reviews})
+    model = Ticket
+    template_name = 'reviews/myPosts.html'
+    context_object_name = 'ticket_list'
+    
+    
+    def get_context_data(self, **kwargs):
+        date= datetime.today()
+        user= self.request.user
+        username= self.request.user.username
+        # get the :
+        logged_in_user_reviews = Review.objects.filter(user=user)
+        logged_in_user_reviews = logged_in_user_reviews.annotate(content_type=Value('REVIEW', CharField()))
+        # and the :
+        logged_in_user_tickets = Ticket.objects.filter(user=user)
+        logged_in_user_tickets = logged_in_user_tickets.annotate(content_type=Value('TICKET', CharField()))
+        answered = []
+        for review in logged_in_user_reviews:
+            answered.append(review.ticket)
 
-def abonnements(request):
+        # combine and sort the two types of posts
+        posts = sorted(
+        chain(logged_in_user_reviews, logged_in_user_tickets),
+        key=lambda post: post.time_created,
+        reverse=True
+        )
+
+        context = super(MyPostsListView, self).get_context_data(**kwargs)
+        context.update({
+            # 'reviews': Review.objects.order_by('-time_created'),
+            # 'more_context': Review.objects.all(),
+            'title':'myPosts',
+            'username': username,
+            'date': date,
+            'posts': posts,
+            'answered': answered
+        })
+        return context
+
+    def get_queryset(self):
+        # return Ticket.objects.order_by('-time_created')
+        pass
+
+
+class FollowCreateView(LoginRequiredMixin, CreateView):
+    # manque id pour que ça enregistre bien - a corriger? 
     """
     page où je peux:
     retrouver la liste des utilisateurs auxquels je suis abonné,
     suivre un nouvel utisateur (à trouver par le nom dans une case, pas de registre demandé),
     me désabonner de quelqu'un
     """
-    # for utilisateur suivi dans abonnements, afficher utilisateur
-    # ajouter à côté de chaque un bouton se désabonner
-    # un input pour rentrer le nom d'un utilisateur pour s'y abonner (après verif qu'il est bien dans la db et récupération)
-    return HttpResponse('<h1>Suivre un utilisateur / Abonnements</h1>')
+    model = UserFollows
+    template_name = 'reviews/abonnements.html'
+ 
+    form_class = FollowForm
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_form_kwargs(self, *args, **kwargs):
+        # comment exclure des choix les utilisateurs déjà suivis?
+        kwargs = super(FollowCreateView, self).get_form_kwargs()
+        kwargs['username']=self.request.user.username
+        kwargs['following']=self.request.user.following.all()
+        # bob = self.request.user.following.all()
+        # for elt in bob:
+        #     print(elt)
+        # print(f"tu vas marcher...{bob}")
+        return kwargs
+    
+    def get_context_data(self, **kwargs):
+        following = self.request.user.following.all()
+        # return queryset of follower
+        followed_by = self.request.user.followed_by.all()
+        context = super(FollowCreateView, self).get_context_data(**kwargs)
+        context.update({
+            'title':'abonnements',
+            'following': following,
+            'followed_by': followed_by,
+        })
+        return context
+
+    # def get_queryset(self):
+    #     return Profile.objects.all().exclude(user=self.request.user)
