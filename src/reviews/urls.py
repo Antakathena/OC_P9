@@ -23,7 +23,7 @@ MyPostsListView
 urlpatterns = [
     path("connect/", views.connect, name = "reviews-connect"),
     # path("feed/", views.feed, name = "reviews-feed"),
-    path('feed/', FeedListView.as_view(), name = "reviews-feed"),
+    path('', FeedListView.as_view(), name = "reviews-feed"),
     path('myPosts/', MyPostsListView.as_view(), name = "reviews-myPosts"),
 
     path('ticket/list', TicketListView.as_view(), name = "reviews-ticket-list"),

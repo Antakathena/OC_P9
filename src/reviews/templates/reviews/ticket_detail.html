@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
+<div class="container-fluid">
     <article id="cadre-exterieur" class="media content-section">
         <div id="ticket" class="media-body align-top col-lg-12 mx-auto">
             <div class="article-metadata">
@@ -30,11 +30,9 @@
             <div id="les-boutons" class="float-end">
                 <!-- les boutons pour pouvoir effacer et modifier -->
                 {% if object not in answered %}
-                <!-- pour optimisation utiliser set qui prend moins de place qu'une liste -->
-
+                <!-- pour optimisation utiliser set qui prend moins de place qu'une liste si bcp données-->
                 <a id="repondre" class="mr-5 align-self-end btn btn-secondary btn-sm mt-1 mb-1"
                     href="{% url 'review-create' %}">Répondre</a>
-                <!-- trouver le if à mettre là pour recouper avec review et savoir si réponse il y a      -->
                 {% else %}
                 <p>Critique faite</p>
                 {% endif %}

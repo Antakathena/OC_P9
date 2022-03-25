@@ -63,7 +63,7 @@ class FollowForm(forms.ModelForm):
         super(FollowForm, self).__init__(*args, **kwargs)
         self.username = username
         self.following = following
-        self.fields['user'].label = "Qui voulez vous suivre ?"
+        self.fields['user'].label = "Choisir parmi :"
         self.fields['user'].queryset = User.objects.all().exclude(username=self.username, following__in=following)
         # # .annotate(nb_followed=Count("user")).filter(nb_followed=0)
 

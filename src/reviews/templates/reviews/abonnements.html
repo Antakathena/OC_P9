@@ -7,7 +7,7 @@
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">CKIKI suit KI ?</legend>
+            <legend class="border-bottom mb-4">Qui voulez vous suivre ?</legend>
             {{ form|crispy }}
         </fieldset>
         <div class="form-group">
@@ -19,8 +19,8 @@
     <h2>Abonnements</h2>
     {% for f in following %}
     <article class="media content-section">
-        <p>{{f}} </p>
-        <a class="mr-5 align-self-end btn btn-secondary btn-sm mt-1 mb-1" href="#">Désabonner</a>
+        <h4 class="p-0 col-8">{{f}}</h4>
+        <a class="col-4 btn btn-secondary btn-sm mt-1 mb-1" href="#">Ne plus suivre</a>
     </article>
     {% endfor %}
 </div>

@@ -10,29 +10,43 @@ donc chercher les utilisateurs suivis et pour chacun afficher ses tickets et ses
 {% extends "base.html" %}
 
 {% block content %}
-<div id="en-tete">
-    <h4 class="">Bonjour {{user.username}}, Bienvenue sur ton feed LITReview</h4>
-    <p class="">Nous sommes le {{date|date:"d F Y"}}</p>
-</div>
-
-<div class="boite-a-boutons row">
-    <div class="col text-center">
-        <a href="{% url 'ticket-create' %}" role="button" class="my-5 btn btn-outline-dark btn-lg">Demander une
-            critique</a>
+<div class="row no-gutter">
+    <div class="container">
+        <div id="en-tete">
+            <h4 class="">Bonjour {{user.username}}, Bienvenue sur ton feed LITReview</h4>
+            <p class="border-bottom mb-4">>Nous sommes le {{date|date:"d F Y"}}</p>
+        </div>
     </div>
-    <div class="col text-center">
-        <a href="{% url 'review-create' %}" role="button" class="my-5 btn btn-outline-dark btn-lg">Créer une
-            critique</a>
+
+    <div class="container" style="height: 5vh">
+        <div class="row no-gutter">
+            <div class="col text-center">
+                <a href="{% url 'ticket-create' %}" role="button"
+                    class="my-5 btn btn-outline-dark btn-lg shadow">Demander une
+                    critique</a>
+            </div>
+            <div class="col text-center">
+                <a href="{% url 'review-create' %}" role="button" class="my-5 btn btn-outline-dark btn-lg shadow">Créer
+                    une
+                    critique</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container shadow-sm">
+        <!-- d'ou vient la marge entre ces deux blocs? comment la réduire
+        NB : pas dans les vues detail-->
+        {% for object in posts %}
+        {% if object.content_type == 'TICKET' %}
+        <div class="p-0 m-0 shadow-sm">
+            {% include 'reviews/ticket_detail.html' %}
+        </div>
+        {% elif object.content_type == 'REVIEW' %}
+        <div class="p-0 m-0 h-auto shadow-sm">
+            {% include 'reviews/review_detail.html' %}
+        </div>
+        {% endif %}
+        {% endfor %}
     </div>
 </div>
-
-
-{% for object in posts %}
-{% if object.content_type == 'TICKET' %}
-{% include 'reviews/ticket_detail.html' %}
-{% elif object.content_type == 'REVIEW' %}
-{% include 'reviews/review_detail.html' %}
-{% endif %}
-{% endfor %}
-
 {% endblock content %}

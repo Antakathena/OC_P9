@@ -213,7 +213,7 @@ class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Supprimer une critique"""
     
     model = Review
-    success_url = "/" 
+    success_url = "" 
     # ou "/feed/" ?
 
     def test_func(self):

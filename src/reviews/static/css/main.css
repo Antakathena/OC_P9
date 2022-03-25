@@ -1,11 +1,10 @@
 body {
-    background: #ffffff;
     color: #333333;
     margin-top: 5rem;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    color: #ff0909;
+    color: #000000;
   }
   
   h4 {
@@ -98,17 +97,6 @@ body {
   }
 
 
-/* eviter l'étirement des images de profil */
-/* You can adjust the image size by increasing/decreasing the width, height */
-.custom-circle-image {
-  width: 20vw; /* note i used vw not px for better responsive */
-  height: 20vw;
-}
-
-.custom-circle-image img {
-  object-fit: cover;
-}
-
 /* A retirer si inutile */
 .demande {
   width: fit-content;
@@ -117,11 +105,6 @@ body {
   margin: auto;
   margin-bottom: 5vh;
   text-align: center;
-}
-
-.boite-a-boutons{
-  width: fit-content;
-  height: fit-content;
 }
 
 #accueil {
@@ -143,4 +126,14 @@ ul.radio li{
 
 .checked {
   color: orange;
+}
+
+/* éviter les problèmes de marges auto des col */
+.no-gutter > [class*='col-'] {
+  padding-right:0;
+  padding-left:0;
+}
+
+.limited-height {
+  height: 50px;
 }
