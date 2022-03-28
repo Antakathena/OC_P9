@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- <p>Bonjour {{prenom|upper}}</p>
-<p>Aujourd'hui nous sommes le {{date|date:"d F Y"}}</p> -->
 
 <div class="container">
     <div class="row">
@@ -26,7 +24,6 @@
         <div class="col-md-5 mt-5 text-center">
             <p>Inscrivez-vous maintenant</p>
             <a href="{% url 'register' %}" role="button" class="my-5 btn btn-outline-dark btn-lg">S'inscrire</a>
-            <!-- qu'est-ce que aria-disabled="true"? et disabled buttons? -->
         </div>
         <div class="col-md mt-5 text-center">
             <p>Connectez-vous</p>

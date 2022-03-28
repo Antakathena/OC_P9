@@ -56,17 +56,21 @@ class TicketForm(forms.ModelForm):
         }
 
 class FollowForm(forms.ModelForm):
-    def __init__(self, *args, username=None, following=None, **kwargs):
+    def __init__(self, *args, username=None, following=None, followed_by=None,  **kwargs):
         """ Username permet d'exclure de la liste des propositions l'utilisateur connecté
         mais following ne fonctionne pas pour exclure ceux qu'on suit déjà.
         C'est une liste mais __in devrait régler ce pb. Mais il y a user et followed_user à chaque fois"""
         super(FollowForm, self).__init__(*args, **kwargs)
         self.username = username
         self.following = following
-        self.fields['user'].label = "Choisir parmi :"
-        self.fields['user'].queryset = User.objects.all().exclude(username=self.username, following__in=following)
-        # # .annotate(nb_followed=Count("user")).filter(nb_followed=0)
+        self.followed_by = followed_by
+        self.fields['followed_user'].label = "Choisir parmi :"
+        self.fields['followed_user'].queryset = User.objects.all().exclude(username=self.username).exclude(id__in=[f.followed_user.id for f in self.following])
 
+        
     class Meta:
         model = UserFollows
-        fields = ('user',)
+        fields = ('followed_user',)
+        # widgets = {
+        #     'followed_user': forms.Textarea(attrs={"class":"textarea",'rows': '1'}),
+        # }

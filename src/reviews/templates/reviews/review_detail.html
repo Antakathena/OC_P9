@@ -3,41 +3,49 @@
 {% block content %}
 
 <div class="container-fluid w-80 m-auto bg-steel">
+
     <article id="cadre-exterieur" class="media content-section">
-        <div id="critique" class="col-lg-12 mx-auto">
+
+        <div id="critique" class="mx-auto">
             <div class="article-metadata">
                 <small class="text-muted">{{object.time_created|date:"H:i, d F Y"}}</small>
             </div>
-            <div class="row m-auto ">
-                <div class="row m-auto ">
-                    <div class="media">
-                        <img class="float-left rounded-circle article-img" src="{{ object.user.profile.image.url}}"
-                            alt="user profile image">
-                    </div>
-                    <div class="media-body row">
-                        <h4 class="col-lg-12">{{object.user}}</h4>
-                        <p class="col-lg-10"> a publié une critique</p>
-                    </div>
-                    <div class="row mt-3">
-                        <h3 class="pl-2 col-9 md-2">{{object.headline}}</h3>
-                        <div rating-value="{{object.rating}}" class="col-3">
-                            <label for="rating-inline">Note :</label>
-                            <span class="fa fa-star {% if object.rating > 0 %} checked {% endif %}"></span>
-                            <span class="fa fa-star {% if object.rating > 1 %} checked {% endif %}"></span>
-                            <span class="fa fa-star {% if object.rating > 2 %} checked {% endif %}"></span>
-                            <span class="fa fa-star {% if object.rating > 3 %} checked {% endif %}"></span>
-                            <span class="fa fa-star {% if object.rating > 4 %} checked {% endif %}"></span>
+            <div class="m-auto row">
+                <div id="review-author ">
+                    <div class="m-auto row">
+                        <div class="media col-3">
+                            <img class="float-left rounded-circle article-img" src="{{ object.user.profile.image.url}}"
+                                alt="user profile image">
                         </div>
-                        <p class="pl-2 article-content text-justify">{{object.body}}</p>
+
+                        <div class="media-body col-9">
+                            <h4 class="m-0">{{object.user}}</h4>
+                            <p class="text-muted mt-0"> a publié une critique</p>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div id="the-review-itself" class="mt-3 ml-5 row">
+                <h3 class="pl-2 col-9 md-2">{{object.headline}}</h3>
+                <div rating-value="{{object.rating}}" class="col-3">
+                    <label for="rating-inline">Note :</label>
+                    <span class="fa fa-star {% if object.rating > 0 %} checked {% endif %}"></span>
+                    <span class="fa fa-star {% if object.rating > 1 %} checked {% endif %}"></span>
+                    <span class="fa fa-star {% if object.rating > 2 %} checked {% endif %}"></span>
+                    <span class="fa fa-star {% if object.rating > 3 %} checked {% endif %}"></span>
+                    <span class="fa fa-star {% if object.rating > 4 %} checked {% endif %}"></span>
+                </div>
+                <p class="pl-2 md-5 col-12 article-content text-justify">{{object.body}}</p>
+            </div>
+
+
             <div id="enReponseA" class="w-100 content-section mx-auto row m-auto ">
-                <div id="auteur-ticket" class="w-100 row">
+                <div id="auteur-ticket" class="w-100 ml-1 row">
                     {% if object.user != object.ticket.user %}
-                    <p class="col-md-6">En réponse à la demande de :</p>
-                    <div class="media-body col-md">
-                        <h4 class="col text-center">{{ object.ticket.user }}</h4>
+                    <p class="col-8">En réponse à la demande de :</p>
+                    <div class="media-body col-4">
+                        <h4 class="col text-right">{{ object.ticket.user }}</h4>
                     </div>
                     <div class="media col-md">
                         <img class=" rounded-circle float-center article-img"

@@ -19,7 +19,8 @@ class Ticket(models.Model):
         return f"Demande à propos de \"{self.title}\" par {self.user}"
 
     def get_absolute_url(self):
-        return reverse('reviews-ticket-detail', kwargs={'pk': self.pk})
+        # return reverse('reviews-ticket-detail', kwargs={'pk': self.pk})
+        return reverse('reviews-myPosts')
     # redirect renvoie à une adresse specifique
     # reverse va seulement donner l'adresse en string à la vue
 
@@ -53,7 +54,8 @@ class Review(models.Model):
         return f"{self.headline}, commentaire par {self.user}"
 
     def get_absolute_url(self):
-        return reverse('reviews-review-detail', kwargs={'pk': self.pk})
+        # return reverse('reviews-review-detail', kwargs={'pk': self.pk})
+        return reverse('reviews-myPosts')
 
 
 class UserFollows(models.Model):
@@ -62,11 +64,12 @@ class UserFollows(models.Model):
     class Meta:
         # ensures we don't get multiple UserFollows instances
         # for unique user-user_followed pairs
-        unique_together = ('user', 'followed_user', )
+        unique_together = ('user', 'followed_user',)
 
     def __str__(self):
-        if 'following':
-            return f"{self.user} suit {self.followed_user}"
-        else:
-            return f"{self.followed_user} est suivi par {self.user}"
+        return f"{self.user} suit {self.followed_user}"
+
+
+    def get_absolute_url(self):
+        return reverse('reviews-myPosts')
     

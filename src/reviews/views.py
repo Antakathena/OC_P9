@@ -1,5 +1,3 @@
-from cProfile import Profile
-from django.http import HttpResponse
 from django.shortcuts import render
 from django.template.loader import get_template
 from django.views.generic import (
@@ -8,19 +6,22 @@ from django.views.generic import (
     CreateView,
     UpdateView,
     DeleteView,
-    TemplateView
     )
 from django.db.models import CharField, Value
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from itertools import chain
 from datetime import datetime
+
+from users.forms import *
+from django.contrib.auth.forms import AuthenticationForm
+
 from .forms import TicketForm, ReviewForm, FollowForm
 from .models import Ticket, Review, UserFollows
-from users.models import Profile
 
 
-class FeedListView(ListView):
+class FeedListView(LoginRequiredMixin, ListView):
     """
     Récupère les Reviews et les Tickets et les range du plus récent au plus vieux
     En fait, j'ai fait comme si pas ListView et en commentaire,
@@ -69,22 +70,28 @@ class FeedListView(ListView):
     #     return Ticket.objects.order_by('-time_created')
 
 
-def connect(request): # ou templateView?
+def connect(request): # ou View?
     """
-    A terme :
     présentation du site et menu détaillé
     possibilité de se connecter
-    renvoi vers ou possibilité de s'inscrire
+    renvoi vers s'inscrire
     """
     date = datetime.today()
-    # template = 'login'
-    # trouver comment gérer sub-template inheritance pour importer login
+    form = AuthenticationForm(request, data=request.POST)
     context = {
         'title':'connect',
         'prenom':'Sophie',
         'date': date,
         'tickets': Ticket.objects.all(),
+        'form': form,
     }
+    if request.method == "POST":
+
+        if form.is_valid():
+            user = form.get_user()
+            login(request,user)
+            return redirect('/')
+             
     return render(request,"reviews/connect.html", context )
 
 
@@ -101,7 +108,7 @@ class TicketListView(ListView):
     ordering = ['-time_created'] # le "-" au début inverse l'ordre
 
 
-class TicketDetailView(DetailView):
+class TicketDetailView(LoginRequiredMixin,DetailView):
     """Affiche un ticket"""
     model = Ticket
     extra_context = {'reviews': Review.objects.all()}
@@ -141,7 +148,7 @@ class TicketDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Supprimer un ticket"""
     # ce ticket devra être supprimé de la page des utilisateurs abonnés
     model = Ticket
-    success_url = "/"
+    success_url = "../.."
 
     def test_func(self):
         post = self.get_object()
@@ -213,7 +220,7 @@ class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Supprimer une critique"""
     
     model = Review
-    success_url = "" 
+    success_url = "../.."
     # ou "/feed/" ?
 
     def test_func(self):
@@ -223,7 +230,7 @@ class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return False
         
 
-class MyPostsListView(ListView):
+class MyPostsListView(LoginRequiredMixin,ListView):
     """
     tous mes tickets et critiques pour pouvoir :
     suivre les réponses (même de gens auxquels je ne suis pas abonné),
@@ -283,7 +290,6 @@ class FollowCreateView(LoginRequiredMixin, CreateView):
     """
     model = UserFollows
     template_name = 'reviews/abonnements.html'
- 
     form_class = FollowForm
 
     def form_valid(self, form):
@@ -295,6 +301,7 @@ class FollowCreateView(LoginRequiredMixin, CreateView):
         kwargs = super(FollowCreateView, self).get_form_kwargs()
         kwargs['username']=self.request.user.username
         kwargs['following']=self.request.user.following.all()
+        kwargs['followed_by']=self.request.user.followed_by.all()
         # bob = self.request.user.following.all()
         # for elt in bob:
         #     print(elt)
@@ -315,3 +322,16 @@ class FollowCreateView(LoginRequiredMixin, CreateView):
 
     # def get_queryset(self):
     #     return Profile.objects.all().exclude(user=self.request.user)
+
+class FollowDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """
+    Ne plus suivre un utilisateur
+    """
+    model = UserFollows
+    success_url = "../.."
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.user:
+            return True
+        return False

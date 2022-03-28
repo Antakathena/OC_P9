@@ -20,7 +20,7 @@
     {% for f in following %}
     <article class="media content-section">
         <h4 class="p-0 col-8">{{f}}</h4>
-        <a class="col-4 btn btn-secondary btn-sm mt-1 mb-1" href="#">Ne plus suivre</a>
+        <a class="col-4 btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'unfollow-delete' f.id %}">Ne plus suivre</a>
     </article>
     {% endfor %}
 </div>

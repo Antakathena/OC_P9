@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 from .views import (
 FollowCreateView,
+FollowDeleteView,
 AnswerView,
 MyPostsListView,
 TicketListView,
@@ -24,6 +25,7 @@ urlpatterns = [
     path("connect/", views.connect, name = "reviews-connect"),
     # path("feed/", views.feed, name = "reviews-feed"),
     path('', FeedListView.as_view(), name = "reviews-feed"),
+    path('reviews/review/', FeedListView.as_view(), name = "reviews"),
     path('myPosts/', MyPostsListView.as_view(), name = "reviews-myPosts"),
 
     path('ticket/list', TicketListView.as_view(), name = "reviews-ticket-list"),
@@ -36,6 +38,7 @@ urlpatterns = [
     # si j'ajoute une page spéciale pour répondre à un ticket particulier (créer la CreateView etc.)
 
     path("abonnements/", FollowCreateView.as_view(), name = "abonnements"),
+    path("unfollow/<pk>/delete/", FollowDeleteView.as_view(), name = "unfollow-delete"),
 
     path('review/list', ReviewListView.as_view(), name = "reviews-review-list"),
     path("review/<pk>/", ReviewDetailView.as_view(), name = "reviews-review-detail"),
