@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-<!-- ça correspond à createView et updateView -->
 
 {% block content %}
 <h2>{{action}}</h2>
@@ -8,15 +7,8 @@
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Ticket</legend>
+            <legend class="border-bottom mb-4">Critique</legend>
             {{ form|crispy }}
-            <div class="media">
-                {% if object.image %}
-                <img class=" img-thumbnail" src="{{ object.image.url}}" alt="book cover">
-                <!-- peut-on prévisualiser l'image avant éditer lors de creation ? -->
-                {% else %}
-                {% endif %}
-            </div>
         </fieldset>
         <div class="form-group">
             <button class="btn btn-outline-info" type="submit">Editer</button>

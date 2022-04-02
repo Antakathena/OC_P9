@@ -46,8 +46,6 @@
                         <a class="nav-item nav-link" href="{% url 'reviews-feed' %}">Accueil</a>
                         <a class="nav-item nav-link" href="{% url 'reviews-myPosts' %}">Mes Posts</a>
                         <a class="nav-item nav-link" href="{% url 'abonnements' %}">Abonnements</a>
-                        <!-- <a class="nav-item nav-link" href="{% url 'reviews-ticket-list' %}">Les Tickets - suppr vue et url</a>
-                        <a class="nav-item nav-link" href="{% url 'reviews-review-list' %}">Les Reviews - suppr vue et url</a> -->
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profil {{user.username}}</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Se déconnecter</a>
                         <img class="rounded-circle nav-img" src="{{ user.profile.image.url}}" alt="user profile image">

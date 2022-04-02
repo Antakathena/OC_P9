@@ -3,20 +3,16 @@
 <!-- ça correspond à createView et updateView-->
 
 {% block content %}
-<div>
-    <h2>Créer une critique qui n'a pas encore de ticket</h2>
-    <a href="{% url 'review-plus-ticket' %}" role="button" class="my-5 btn btn-outline-dark btn-lg shadow">Créer une
-        critique
-        et son ticket</a>
-</div>
 
-<h2>{{action}}</h2>
+<h2>Créer une critique et son ticket</h2>
+<!-- on essaye d'afficher les deux formulaires
+    le champ ticket devra être le ticket assicié avec la critique -->
 <div class="content-section">
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Critique</legend>
-            {{ form|crispy }}
+            {{ ticket_form|crispy }}
+            {{ review_form|crispy }}
         </fieldset>
         <div class="form-group">
             <button class="btn btn-outline-info" type="submit">Editer</button>

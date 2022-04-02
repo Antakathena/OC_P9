@@ -2,11 +2,10 @@
 
 {% block content %}
 
-<div class="container-fluid w-80 m-auto bg-steel">
+<div class="container-fluid bg-steel">
 
     <article id="cadre-exterieur" class="media content-section">
-
-        <div id="critique" class="mx-auto">
+        <div id="critique" class="media-body align-top col-lg-12 mx-auto">
             <div class="article-metadata">
                 <small class="text-muted">{{object.time_created|date:"H:i, d F Y"}}</small>
             </div>
@@ -68,7 +67,6 @@
                         <img class="img-thumbnail float-right" src="{{ object.ticket.image.url}}" alt="book cover">
                     </div>
                     {% else %}
-                    <p>pas d'image donnée</p>
                     {% endif %}
                 </div>
             </div>
@@ -85,8 +83,4 @@
     </article>
 </div>
 
-<script>
-    var rating = parseInt("{{object.rating}}")
-    console.log(rating)
-</script>
 {% endblock content %}

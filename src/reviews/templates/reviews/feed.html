@@ -1,16 +1,7 @@
-<!-- partie fournie dans le projet OC
-in feed.html
-Use the 'include' tag to reuse ticket and review elements between pages -->
-
-...
-<!-- Afficher les tickets et reviews des utilisateurs qu'on suit, 
-donc chercher les utilisateurs suivis et pour chacun afficher ses tickets et ses reviews -->
-
-
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row no-gutter">
+<div id="en-tête" class="row no-gutter">
     <div class="container ">
         <div id="en-tete">
             <p class="border-bottom text-right mb-4">Nous sommes le {{date|date:"d F Y"}}</p>
@@ -20,6 +11,7 @@ donc chercher les utilisateurs suivis et pour chacun afficher ses tickets et ses
     </div>
 
     <div class="container" style="height: 5vh">
+        <!-- 5vh sert à réduire la marge mais pas la solution idéale ? -->
         <div class="row no-gutter">
             <div class="col text-center">
                 <a href="{% url 'ticket-create' %}" role="button"

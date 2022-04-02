@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 
 class Ticket(models.Model):
     title = models.CharField(max_length=128)
-    description = models.TextField(max_length=2048, blank=True)
+    description = models.TextField(max_length=2048, blank=True, default="L'avez-vous lu ?")
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     image = models.ImageField(null=True, blank=True, upload_to='cover_pics')
     time_created = models.DateTimeField(auto_now_add=True)
@@ -20,9 +20,10 @@ class Ticket(models.Model):
 
     def get_absolute_url(self):
         # return reverse('reviews-ticket-detail', kwargs={'pk': self.pk})
+        # redirect renvoie à une adresse specifique
+        # reverse va seulement donner l'adresse en string à la vue
         return reverse('reviews-myPosts')
-    # redirect renvoie à une adresse specifique
-    # reverse va seulement donner l'adresse en string à la vue
+
 
     def save(self, *args, **kwargs):
         """
