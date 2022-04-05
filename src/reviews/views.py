@@ -21,7 +21,14 @@ from itertools import chain
 from datetime import datetime
 
 from users.forms import *
-from .forms import TicketForm, ReviewForm, ReviewAnswerForm, FollowForm
+from .forms import (
+    TicketForm,
+    ReviewForm,
+    ReviewAnswerForm,
+    FollowForm,
+    TicketPlusReviewForm,
+    ReviewPlusTicketForm
+    )
 from .models import Ticket, Review, UserFollows
 
 def connect(request): # ou View?
@@ -64,13 +71,21 @@ class FeedListView(LoginRequiredMixin, ListView):
         """
         date= datetime.today()
         username= self.request.user.username
-        reviews = Review.objects.all()
-        # returns queryset of reviews
+        following = self.request.user.following.all().values_list()
+        following_id =[]
+        for elt in self.request.user.following.all().values_list() :
+            # ceux que l'on suit
+            following_id.append(elt[-1])
+
+        reviews = Review.objects.filter(user_id__in=following_id) # .filter()
         reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
 
-        tickets = Ticket.objects.all()
+        tickets = Ticket.objects.filter(user_id__in=following_id) # .filter(user=following ?)
+        print(f'voici les tickets au complet : {Ticket.objects.all().values()}')
+        print(f'voici following.all() : {following_id}')
+        print(f'voici un essai pour récupérer les tickets des suivis : {Ticket.objects.filter(user_id__in=following_id)}')
+
         tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
-        # returns queryset of tickets
         # ou plus adapté à POO ? : def get_queryset(self):
         # return Ticket.objects.order_by('-time_created')
 
@@ -93,7 +108,7 @@ class FeedListView(LoginRequiredMixin, ListView):
             'username': username,
             'date': date,
             'posts': posts,
-            'answered': answered
+            'answered': answered,
         })
         return context
 
@@ -120,13 +135,20 @@ class MyPostsListView(LoginRequiredMixin,ListView):
         # and the :
         logged_in_user_tickets = Ticket.objects.filter(user=user)
         logged_in_user_tickets = logged_in_user_tickets.annotate(content_type=Value('TICKET', CharField()))
+        # and get the answer to our tickets :
+        review_to_our_tickets = Review.objects.filter(ticket__in=logged_in_user_tickets)
+        review_to_our_tickets = review_to_our_tickets.annotate(content_type=Value('REVIEW', CharField()))
+
+        
+        # check if a ticket already has an answer
+        reviews = Review.objects.all()
         answered = []
-        for review in logged_in_user_reviews:
+        for review in reviews:
             answered.append(review.ticket)
 
         # combine and sort the two types of posts
         posts = sorted(
-        chain(logged_in_user_reviews, logged_in_user_tickets),
+        chain(logged_in_user_reviews, logged_in_user_tickets, review_to_our_tickets),
         key=lambda post: post.time_created,
         reverse=True
         )
@@ -139,7 +161,8 @@ class MyPostsListView(LoginRequiredMixin,ListView):
             'username': username,
             'date': date,
             'posts': posts,
-            'answered': answered
+            'answered': answered,
+            'review_to_our_tickets': review_to_our_tickets,
         })
         return context
 
@@ -255,13 +278,12 @@ def ReviewPlusTicket(request):  # class ReviewPlusTicketCreateView(LoginRequired
     """
     créer un commentaire sur un ouvrage sans ticket, en créant le ticket
     """
-    ticket_form = TicketForm()
-    
-    # sauf qu'il ne faut que le titre, la description doit être remplie automatiquement
-    review_form = ReviewAnswerForm()
+    ticket_form = TicketPlusReviewForm()
+    review_form = ReviewPlusTicketForm()
+
     if request.method == 'POST':
-        ticket_form = TicketForm(request.POST)
-        review_form = ReviewForm(request.POST, request.FILES)
+        ticket_form = TicketPlusReviewForm(request.POST)
+        review_form = ReviewPlusTicketForm(request.POST, request.FILES)
         if all([ticket_form.is_valid(), review_form.is_valid()]):
             ticket = ticket_form.save(commit=False)
             ticket.user = request.user
@@ -395,10 +417,6 @@ class FollowCreateView(LoginRequiredMixin, CreateView):
         kwargs['username']=self.request.user.username
         kwargs['following']=self.request.user.following.all()
         kwargs['followed_by']=self.request.user.followed_by.all()
-        # bob = self.request.user.following.all()
-        # for elt in bob:
-        #     print(elt)
-        # print(f"tu vas marcher...{bob}")
         return kwargs
     
     def get_context_data(self, **kwargs):
