@@ -1,3 +1,4 @@
+from dataclasses import fields
 from re import template
 from django.shortcuts import render
 from django.template.loader import get_template
@@ -52,7 +53,7 @@ class FeedListView(LoginRequiredMixin, ListView):
     Récupère les Reviews et les Tickets et les range du plus récent au plus vieux
     En fait, j'ai fait comme si pas ListView et en commentaire,
     def feed(request): ...     return render(request, 'reviews/feed.html', context)
-    comment il aurait vraiment fallu faire avec ListView
+    comment aurait-il vraiment fallu faire avec ListView ? pistes en commentaire
     """
     model = Ticket
     template_name = 'reviews/feed.html'
@@ -238,14 +239,26 @@ class ReviewCreateView(LoginRequiredMixin, CreateView,):
         return super().form_valid(form)
 
 
+def get_reviews_ticket(self):
+        """
+        (sert à récupérer review.ticket_id quand on a le pk d'une review)
+        Pour review_update et delete : donne l'id du ticket de la critique
+        """
+        pk = self.kwargs.get("pk") # récupère l'id de la review
+        review = Review.objects.filter(id=pk) # récupère la review, queryset (itérable)
+        qs_ticket_id = review.values_list('ticket_id', flat=True) # ticket_id = <QuerySet [31]>
+        ticket_id = qs_ticket_id.first() # = la valeur et non un queryset
+        return ticket_id
+
 @login_required
 def ReviewPlusTicket(request):  # class ReviewPlusTicketCreateView(LoginRequiredMixin, CreateView,)
     """
     créer un commentaire sur un ouvrage sans ticket, en créant le ticket
     """
     ticket_form = TicketForm()
+    
     # sauf qu'il ne faut que le titre, la description doit être remplie automatiquement
-    review_form = ReviewForm()
+    review_form = ReviewAnswerForm()
     if request.method == 'POST':
         ticket_form = TicketForm(request.POST)
         review_form = ReviewForm(request.POST, request.FILES)
@@ -265,13 +278,35 @@ def ReviewPlusTicket(request):  # class ReviewPlusTicketCreateView(LoginRequired
 }
     return render(request, 'reviews/review-plus-ticket-form.html', context=context)
     
-
 class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Update une critique"""
 
     model = Review
-    form_class = ReviewForm
-    extra_context = {'action':"Modifier votre critique"}
+    form_class = ReviewAnswerForm
+    extra_context = {'action':"Modifier votre critique", "ticket" : "déterminé"}
+    # "ticket" : "déterminé" sert à dire au template s'il doit afficher ou non un bouton.
+    
+    def get_initial(self):
+        """returns the initial data to use for forms on this view"""
+        ticket_id= get_reviews_ticket(self)
+
+        try:
+            initial = super().get_initial()
+            initial['ticket'] = ticket_id
+        except Exception as e:
+            print(e)
+        return initial
+
+    def get_form_kwargs(self, *args, **kwargs):
+        """
+        Détermine les arguments nommés qui seront envoyés au __init__ de form_class
+        via form_class(**self.get_form_kwargs())
+        """
+        ticket_id= get_reviews_ticket(self)
+
+        kwargs = super().get_form_kwargs()
+        kwargs["ticket_id"] = ticket_id
+        return kwargs 
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -290,24 +325,33 @@ class AnswerView(LoginRequiredMixin, CreateView):
     """
 
     model = Review
-    template = "answer.html"
     form_class = ReviewAnswerForm
     
     # l'idée : si "répondre" a été cliqué au bas d'un ticket, on aura un ticket.id envoyé par le html via l'url
-    extra_context = {'action':"Repondez à la demande", "ticket_id : "}
+    extra_context = {'action':"Vous pouvez répondre à la demande", "ticket" : "déterminé"}
 
     def get_initial(self):
         """returns the initial data to use for forms on this view"""
         try:
-            initial = super(AnswerView, self).get_initial()
-            if ticket_id:
-                initial['ticket'] = self.request.POST["ticket_id"] # à moins qu'il faille le mettre dans context
-        except Exception as e: print(e)
+            initial = super().get_initial() # la forme explicite de super() avec super(ReviewAnswerForm, self) est datée
+            initial['ticket'] = self.kwargs.get("ticket_id")
+        except Exception as e:
+            print(e)
+        return initial
 
-    # def get_form_kwargs(self, *args, **kwargs):
-    #     kwargs = super(AnswerView, self).get_form_kwargs()
-    #     print(f"voilà les kwargs : {kwargs}")
-    #     kwargs['ticket_id']=self.request.POST["ticket_id"] # POST est c un dico des données passées en POST
+    def get_form_kwargs(self, *args, **kwargs):
+        """
+        Détermine les arguments nommés qui seront envoyés au __init__ de form_class
+        via form_class(**self.get_form_kwargs())
+        """
+        kwargs = super().get_form_kwargs()
+        # les kwargs passés à la vue sont bien dans self.kwargs
+        # get_form_kwargs sert à les transmettre au constructeur du formulaire
+        # cf https://github.com/django/django/blob/main/django/views/generic/edit.py#L39
+        kwargs["ticket_id"] = self.kwargs.get("ticket_id")
+        # étudier .get() et .POST[]
+        # POST est c un dico des données passées en POST
+        return kwargs 
 
     def form_valid(self, form):
         form.instance.user = self.request.user

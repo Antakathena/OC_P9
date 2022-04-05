@@ -32,18 +32,10 @@
                 <!-- les boutons pour pouvoir effacer et modifier -->
                 {% if object not in answered %}
                 <!-- pour optimisation utiliser set qui prend moins de place qu'une liste si bcp données-->
-                <p class="bg-danger">j'essaye de trouver comment avoir le ticket auquel on répond dans le formulaire:
-                </p>
-
-                <a id="repondre" class="mr-5 align-self-end btn btn-secondary btn-sm mt-1 mb-1"
-                    href="{% url 'review-create' %}">créer une critique</a>
-                <p>voici l'object.id : {{object.id}} et l'object.title : {{object.title}}</p>
 
                 <a id="repondre" class="mr-5 align-self-end btn btn-secondary btn-sm mt-1 mb-1"
                     href="{% url 'answer' ticket_id=object.id %}">Répondre</a>
 
-                <!-- il faut passer l'id/pk du ticket à mettre dans la create review
-                    mais avec object.id, la vue croit qu'on lui passe un id de review -->
                 {% else %}
                 <p class="btn btn-secondary btn-sm">Critique faite</p>
                 {% endif %}

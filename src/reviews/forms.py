@@ -52,13 +52,14 @@ class ReviewForm(forms.ModelForm):
 
 class ReviewAnswerForm(forms.ModelForm):
     """
-    Formulaire qui préselectionne le ticket auquel on veut répondre
+    Formulaire pour poster une critique
+    qui préselectionne le ticket auquel on veut répondre
     """
     def __init__(self, *args, ticket_id=None, **kwargs):
-        super(ReviewForm, self).__init__(*args, **kwargs)
-        self.ticket_id = ticket_id
+        super().__init__(*args, **kwargs)
+        self.ticket = Ticket.objects.filter(id=ticket_id)
         self.fields['ticket'].label = "Vous répondez à"
-        self.fields['ticket'].queryset = Ticket.objects.filter(ticket_id=ticket_id)
+        self.fields['ticket'].queryset = self.ticket
         self.fields['rating'].label = "Donnez une note"
         self.fields['headline'].label = "Intitulé du commentaire"
         self.fields['body'].label = "Inscrivez votre commentaire"
