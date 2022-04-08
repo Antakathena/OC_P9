@@ -1,7 +1,3 @@
-from dataclasses import fields
-from re import template
-from django.shortcuts import render
-from django.template.loader import get_template
 from django.views.generic import (
     ListView,
     DetailView,
