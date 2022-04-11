@@ -20,7 +20,7 @@ from users.forms import *
 from .forms import (
     TicketForm,
     ReviewForm,
-    ReviewAnswerForm,
+    # ReviewAnswerForm,
     FollowForm,
     TicketPlusReviewForm,
     ReviewPlusTicketForm
@@ -223,7 +223,6 @@ class TicketDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Ticket
     success_url = "/"
     print(f'success_url: {success_url}')
-    # pourquoi marchait précédemment avec ../.. ? (mais c'est mieux comme ça)
 
     def test_func(self):
         post = self.get_object()
@@ -270,7 +269,7 @@ def get_reviews_ticket(self):
         return ticket_id
 
 @login_required
-def ReviewPlusTicket(request):  # class ReviewPlusTicketCreateView(LoginRequiredMixin, CreateView,)
+def review_plus_ticket(request):  # class ReviewPlusTicketCreateView(LoginRequiredMixin, CreateView,)
     """
     créer un commentaire sur un ouvrage sans ticket, en créant le ticket
     """
@@ -300,7 +299,7 @@ class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Update une critique"""
 
     model = Review
-    form_class = ReviewAnswerForm
+    form_class = ReviewForm
     extra_context = {'action':"Modifier votre critique", "ticket" : "déterminé"}
     # "ticket" : "déterminé" sert à dire au template s'il doit afficher ou non un bouton.
     
@@ -337,13 +336,13 @@ class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return False
 
 
-class AnswerView(LoginRequiredMixin, CreateView):
+class ReviewToSpecificTicketView(LoginRequiredMixin, CreateView):
     """
     écrire une critique en réponse à un ticket spécifique
     """
 
     model = Review
-    form_class = ReviewAnswerForm
+    form_class = ReviewForm #ReviewAnswerForm
     
     # l'idée : si "répondre" a été cliqué au bas d'un ticket, on aura un ticket.id envoyé par le html via l'url
     extra_context = {'action':"Vous pouvez répondre à la demande", "ticket" : "déterminé"}
@@ -392,9 +391,8 @@ class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 class FollowCreateView(LoginRequiredMixin, CreateView):
-    # manque id pour que ça enregistre bien - a corriger? 
     """
-    page où je peux:
+    Correcpond à une page où l'utilisateur peut :
     retrouver la liste des utilisateurs auxquels je suis abonné,
     suivre un nouvel utisateur (à trouver par le nom dans une case, pas de registre demandé),
     me désabonner de quelqu'un
@@ -402,13 +400,13 @@ class FollowCreateView(LoginRequiredMixin, CreateView):
     model = UserFollows
     template_name = 'reviews/follow.html'
     form_class = FollowForm
+    success_url = "/reviews/follow/"
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
     def get_form_kwargs(self, *args, **kwargs):
-        # comment exclure des choix les utilisateurs déjà suivis?
         kwargs = super(FollowCreateView, self).get_form_kwargs()
         kwargs['username']=self.request.user.username
         kwargs['following']=self.request.user.following.all()
@@ -416,9 +414,8 @@ class FollowCreateView(LoginRequiredMixin, CreateView):
         return kwargs
     
     def get_context_data(self, **kwargs):
-        following = self.request.user.following.all()
-        # return queryset of follower
-        followed_by = self.request.user.followed_by.all()
+        following = self.request.user.following.all() # queryset de ceux que l'on suit
+        followed_by = self.request.user.followed_by.all() # queryset de ceux qui nous suivent
         context = super(FollowCreateView, self).get_context_data(**kwargs)
         context.update({
             'title':'abonnements',
@@ -435,7 +432,7 @@ class FollowDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     Ne plus suivre un utilisateur
     """
     model = UserFollows
-    success_url = "/"
+    success_url = "/reviews/follow/"
 
     def test_func(self):
         post = self.get_object()

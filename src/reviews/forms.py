@@ -1,13 +1,14 @@
-from plistlib import UID
 from django import forms
 from django.utils.safestring import mark_safe
 from django.db.models import Count
 
 from django.contrib.auth.models import User
 from .models import Ticket, Review, UserFollows
-from users.models import Profile
 
-# key-value , key-Display value pairs (seen in the form).
+"""
+Choices pour le radiobutton du ReviewForm.
+Tuple key-value , key-Display value pairs (seen in the form).
+"""
 CHOICES=[
     (1,1),
     (2,2),
@@ -23,18 +24,40 @@ class HorizontalRadioRenderer(forms.RadioSelect):
     def render(self):
         return mark_safe(u'\n'.join([u'%s\n' % w for w in self]))
 
+
+class TicketForm(forms.ModelForm):
+    """
+    Formulaire qui permet de créer un ticket pour demander une critique
+    On peut ajouter une image qui sera redimensionnée par le modèle (facultative)
+    """
+    def __init__(self, *args, **kwargs):
+        super(TicketForm, self).__init__(*args, **kwargs)
+        self.fields['title'].label = "Veuillez indiquer le titre et l'auteur"
+        self.fields['description'].label = "Formulez votre demande" # ne pas afficher ce champ si review+ticket
+        self.fields['image'].required = False
+        
+    class Meta:
+        model = Ticket
+        fields = ('title', 'description', 'image')
+        widgets = {
+            'description': forms.Textarea(attrs={"class":"textarea",'rows': '2'}),
+        }
+
+
 class ReviewForm(forms.ModelForm):
     """
-    Formulaire qui permet de choisir le ticket existant et
-    sans critique auquel on veut répondre
+    Formulaire qui permet de choisir le ticket existant auquel on veut répondre
+    parmi ceux qui n'ont pas encore eu de réponse
     """
     def __init__(self, *args, ticket_id=None, **kwargs):
         super(ReviewForm, self).__init__(*args, **kwargs)
         self.fields['ticket'].label = "Vous répondez à"
         # soit on a un ticket determiné soit on a une liste des tickets sans critique:
         if self.fields['ticket'].initial:
-            self.fields['ticket'].queryset = Ticket.objects.filter(ticket_id=ticket_id) # là on a que le ticket voulu
+            # là on a que le ticket voulu
+            self.fields['ticket'].queryset = Ticket.objects.filter(ticket_id=ticket_id) 
         else :
+            # on a une liste des tickets qui n'ont pas encore de réponse
             self.fields['ticket'].queryset = Ticket.objects.annotate(nb_review=Count("review")).filter(nb_review=0)
         self.fields['rating'].label = "Donnez une note"
         self.fields['headline'].label = "Intitulé du commentaire"
@@ -49,16 +72,17 @@ class ReviewForm(forms.ModelForm):
             'body': forms.Textarea(attrs={"class":"textarea",'rows': '10'})
         }
 
-
+"""
 class ReviewAnswerForm(forms.ModelForm):
-    """
-    Formulaire pour poster une critique
-    qui préselectionne le ticket auquel on veut répondre
-    """
+    
+    Formulaire pour poster une critique qui préselectionne le ticket
+    (quand on a cliqué sur "répondre" sous un ticket ou
+     qu'on veut mettre à jour une critique)
+    
     def __init__(self, *args, ticket_id=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.ticket = Ticket.objects.filter(id=ticket_id)
-        self.fields['ticket'].label = "Vous répondez à" # ne pas afficher ce champ si review+ticket
+        self.fields['ticket'].label = "Vous répondez à"
         self.fields['ticket'].queryset = self.ticket
         self.fields['rating'].label = "Donnez une note"
         self.fields['headline'].label = "Intitulé du commentaire"
@@ -72,6 +96,7 @@ class ReviewAnswerForm(forms.ModelForm):
             'rating':forms.RadioSelect(attrs={'class': 'radio'},choices=CHOICES),
             'body': forms.Textarea(attrs={"class":"textarea",'rows': '10'})
         }
+"""
 
 class TicketPlusReviewForm(forms.ModelForm):
     """
@@ -87,6 +112,7 @@ class TicketPlusReviewForm(forms.ModelForm):
     class Meta:
         model = Ticket
         fields = ('title', 'image')
+
 
 class ReviewPlusTicketForm(forms.ModelForm):
     """
@@ -106,21 +132,6 @@ class ReviewPlusTicketForm(forms.ModelForm):
         widgets = {
             'rating':forms.RadioSelect(attrs={'class': 'radio'},choices=CHOICES),
             'body': forms.Textarea(attrs={"class":"textarea",'rows': '10'})
-        }
-
-
-class TicketForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(TicketForm, self).__init__(*args, **kwargs)
-        self.fields['title'].label = "Veuillez indiquer le titre et l'auteur"
-        self.fields['description'].label = "Formulez votre demande" # ne pas afficher ce champ si review+ticket
-        self.fields['image'].required = False
-        
-    class Meta:
-        model = Ticket
-        fields = ('title', 'description', 'image')
-        widgets = {
-            'description': forms.Textarea(attrs={"class":"textarea",'rows': '2'}),
         }
 
 
