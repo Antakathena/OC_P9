@@ -1,19 +1,18 @@
 # OC_P9
 
-Study Project : Django Training. Web app creation
+## Study Project : Django Training. Web app creation
 
-Infos Générales :
+### Infos Générales :
 OC_P9 est un programme d'étude du Framework python Django (MVT).
 
-Utilité :
+### Utilité :
 Il s'agit d'une app web qui permet aux utilisateurs connectés de demander des critiques de livre et d'en poster.
 
 
-Fonctionnalités :
-Le Projet se nomme LIReview, il est dans un fichier nommé src et comporte deux app : users et reviews.
+### Fonctionnalités :
+#### Le Projet se nomme LIReview, il est dans un fichier nommé src et comporte deux app : users et reviews.
 
-
-Un utilisateur peut :
+#### Un utilisateur peut :
     - se connecter et s'inscrire (une app "users" distincte, le reste se trouve dans l'app "reviews")
     - acceder à son profil, ajouter ou modifier des informations (app "users")
 
@@ -25,7 +24,7 @@ Un utilisateur peut :
     - choisir de suivre d'autres utilisateurs ou ne plus les suivre
 
 
-Organisation (détail et remarques sur l'app reviews):
+#### Organisation (détail et remarques sur l'app reviews):
 
     models.py :
         - Ticket
@@ -46,7 +45,7 @@ Organisation (détail et remarques sur l'app reviews):
 
 
 
-Instruction de démarrage :
+### Instruction de démarrage :
 Dans un terminal, utiliser les commandes suivantes :
 
 $ python3 -m venv env (créé un dossier env dans le répertoire où vous vous trouvez)
@@ -62,7 +61,7 @@ $ pip install -r requirements.txt
 Mot de passe des utilisateurs tests : Testing321
 
 
-Informations supplémentaires :
+### Informations supplémentaires :
 - Python 3.10 a été utilisé pour ce projet.
 - Front : Pour le CSS le framework Bootstrap a été utilisé (classes Bootstrap dans le HTML)
 + une feuille de style style.css + resermeyer.css qui sert à neutraliser les informations de mise en page inhérentes au HTML pour éviter certains soucis
