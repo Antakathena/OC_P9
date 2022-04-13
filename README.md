@@ -58,12 +58,21 @@ $ cd ../chemin/du/dossier (de la copie de OC_P9 dans votre dossier env)
 
 $ pip install -r requirements.txt
 
-Mot de passe des utilisateurs tests : Testing321
+$ cd src
 
+Une fois dans le dossier src, utiliser la commande 
+
+$ python manage.py runserver
+
+Vous pourrez alors explorer localement l'app
+sur votre navigateur à l'adresse http://127.0.0.1:8000/
 
 ### Informations supplémentaires :
 - Python 3.10 a été utilisé pour ce projet.
+
 - Front : Pour le CSS le framework Bootstrap a été utilisé (classes Bootstrap dans le HTML)
- et une feuille de style style.css + resermeyer.css qui sert à neutraliser 
- les informations de mise en page inhérentes au HTML pour éviter certains soucis
-- Des exemples de reviews, tickets et users sont fournis dans la base de donnée (db.squlite3)
+    et une feuille de style style.css + resermeyer.css qui sert à neutraliser 
+    les informations de mise en page inhérentes au HTML pour éviter certains soucis.
+
+- Des exemples de reviews, tickets et users sont fournis dans la base de donnée (db.squlite3),
+    Mot de passe des utilisateurs tests : Testing321  
