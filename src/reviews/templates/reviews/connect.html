@@ -4,30 +4,12 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-sm-3 content-section bg-info">
-            <h3>Mes rubriques</h3>
-            <p class='text-muted'>Les usages de l'app:
-            <ul class="list-group">
-                <li class="list-group-item list-group-item-light">Demander un avis <br>
-                    (ticket)</li>
-                <li class="list-group-item list-group-item-light">Donner un avis <br>
-                    (review suite à un ticket)</li>
-                <li class="list-group-item list-group-item-light">Suivre ses posts <br>
-                    (modifier, supprimer)</li>
-                <li class="list-group-item list-group-item-light">Flux/Feed<br>
-                    (posts des utilisateurs suivis)</li>
-                <li class="list-group-item list-group-item-light">Page abonnements <br>
-                    (afficher les utilisateurs suivis, s'abonner, se désabonner)</li>
-            </ul>
-            </p>
-        </div>
         <div class="col-md-5 mt-5 text-center">
             <p>Inscrivez-vous maintenant</p>
             <a href="{% url 'register' %}" role="button" class="my-5 btn btn-outline-dark btn-lg">S'inscrire</a>
         </div>
         <div class="col-md mt-5 text-center">
             <p>Connectez-vous</p>
-            <!-- trouver comment inclure les champs qui manquent. > views?-->
             <div class="my-5">
                 {% include 'users/login.html'%}
             </div>

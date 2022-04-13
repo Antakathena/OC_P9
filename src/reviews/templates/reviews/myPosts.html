@@ -1,12 +1,3 @@
-<!-- partie fournie dans le projet OC
-in feed.html
-Use the 'include' tag to reuse ticket and review elements between pages -->
-
-...
-<!-- Afficher les tickets et reviews des utilisateurs qu'on suit, 
-donc chercher les utilisateurs suivis et pour chacun afficher ses tickets et ses reviews -->
-
-
 {% extends "base.html" %}
 
 {% block content %}
@@ -45,6 +36,10 @@ donc chercher les utilisateurs suivis et pour chacun afficher ses tickets et ses
             {% include 'reviews/ticket_detail.html' %}
         </div>
         {% elif object.content_type == 'REVIEW' %}
+        <div class="p-0 m-0 h-auto shadow-sm">
+            {% include 'reviews/review_detail.html' %}
+        </div>
+        {% elif object.content_type == 'REVIEWTOTICKET' %}
         <div class="p-0 m-0 h-auto shadow-sm">
             {% include 'reviews/review_detail.html' %}
         </div>

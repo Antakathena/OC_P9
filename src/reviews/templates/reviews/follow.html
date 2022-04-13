@@ -12,6 +12,7 @@
         </fieldset>
         <div class="form-group">
             <button type="submit">Confirmer</button>
+        </div>
     </form>
 </div>
 
@@ -28,7 +29,6 @@
 <div id="utilisateurs-abonnés">
     <h2>Abonnés</h2>
     {% for f in followed_by %}
-    <!-- soit templates différents à hériter soit spécifier object list dans la vue -->
     <article class="media content-section">
         <h4>{{f}}</h4>
     </article>

@@ -64,5 +64,6 @@ Mot de passe des utilisateurs tests : Testing321
 ### Informations supplémentaires :
 - Python 3.10 a été utilisé pour ce projet.
 - Front : Pour le CSS le framework Bootstrap a été utilisé (classes Bootstrap dans le HTML)
-+ une feuille de style style.css + resermeyer.css qui sert à neutraliser les informations de mise en page inhérentes au HTML pour éviter certains soucis
-Des exemples de reviews, tickets et users sont fournis dans la base de donnée (db.squlite3)
+ et une feuille de style style.css + resermeyer.css qui sert à neutraliser 
+ les informations de mise en page inhérentes au HTML pour éviter certains soucis
+- Des exemples de reviews, tickets et users sont fournis dans la base de donnée (db.squlite3)

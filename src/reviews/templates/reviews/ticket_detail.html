@@ -32,10 +32,8 @@
                 <!-- les boutons pour pouvoir effacer et modifier -->
                 {% if object not in answered %}
                 <!-- pour optimisation utiliser set qui prend moins de place qu'une liste si bcp données-->
-
                 <a id="repondre" class="mr-5 align-self-end btn btn-secondary btn-sm mt-1 mb-1"
                     href="{% url 'answer' ticket_id=object.id %}">Répondre</a>
-
                 {% else %}
                 <p class="btn btn-secondary btn-sm">Critique faite</p>
                 {% endif %}
