@@ -31,15 +31,15 @@ urlpatterns = [
     path('myPosts/', MyPostsListView.as_view(), name="reviews-myPosts"),
 
     path("ticket/<pk>/", TicketDetailView.as_view(), name="reviews-ticket-detail"),
-    path("ticket/create", TicketCreateView.as_view(), name="ticket-create"),
+    path("ticket/create/", TicketCreateView.as_view(), name="ticket-create"),
     path("ticket/<pk>/update/", TicketUpdateView.as_view(), name="ticket-update"),
     path("ticket/<pk>/delete/", TicketDeleteView.as_view(), name="ticket-delete"),
 
     path("review/<pk>/", ReviewDetailView.as_view(), name="reviews-review-detail"),
-    path("review/create", ReviewCreateView.as_view(), name="review-create"),
+    path("review/create/", ReviewCreateView.as_view(), name="review-create"),
     path("review/<pk>/update/", ReviewUpdateView.as_view(), name="review-update"),
     path("review/<pk>/delete/", ReviewDeleteView.as_view(), name="review-delete"),
-    path("review/review-plus-ticket", views.review_plus_ticket, name="review-plus-ticket"),
+    path("review/review-plus-ticket/", views.review_plus_ticket, name="review-plus-ticket"),
     path("ticket/<ticket_id>/answer/", ReviewToSpecificTicketView.as_view(), name="answer"),
 ]
 
