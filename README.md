@@ -1,6 +1,6 @@
 # OC_P9
 
-## Study Project : Django Training. Web app creation
+## Study Project : Django Training. Web app creation : LITREView
 
 ### Infos Générales :
 OC_P9 est un programme d'étude du Framework python Django (MVT).
